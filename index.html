@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAGE - Sistema de Análise e Gerenciamento Energético</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="src/styles/style.css">
+    <link rel="stylesheet" href="src/styles/navbar.css">
+    <link rel="stylesheet" href="src/styles/banner.css">
+
+    <!-- GSAP and ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">SAGE</div>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="navbar" id="navbar">
+            <div class="nav-overlay" id="navOverlay"></div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#sistema">Sistema</a></li>
+                <li><a href="#funcionalidades">Funcionalidades</a></li>
+                <li><a href="#requisitos">Recursos</a></li>
+                <li><a href="#impacto">Impacto</a></li>
+                <li><a href="cadastro.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div id="banner">
+                <div id="banner-content">
+                    <div class="banner-text">
+                        <h1><span>S</span>istema de <span>A</span>nálise e <span>G</span>erenciamento <span>E</span>nergético</h1>
+                        <p>Monitore, analise e otimize o consumo energético da sua empresa com nossa plataforma
+                            inteligente. Reduza custos e promova sustentabilidade através de dados precisos.</p>
+                        <a href="#sistema" class="btn-primary">Conheça nossa solução</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sistema">
+            <div id="solution-text-container">
+                <h2>Nossa Solução</h2>
+                <p>Uma plataforma web completa para análise e gerenciamento do consumo energético empresarial. Nosso
+                    sistema permite o cadastro da estrutura organizacional, registro de contas de luz, monitoramento
+                    detalhado por dispositivo e geração de relatórios estratégicos.</p>
+                    <br>
+                <p>Com dashboards interativos e análises de rateio, sua empresa poderá identificar pontos críticos de
+                    consumo, reduzir custos operacionais e implementar estratégias eficazes para maior eficiência
+                    energética e sustentabilidade.</p>
+            </div>
+            <div id="solution-image-container">
+                <img id="solution-image" src="src/images/system-image.png" alt="">
+        </div>
+        </section>
+
+        <section id="funcionalidades">
+            <div class="functionality-wrapper">
+                <div class="text-center">
+                    <h2 class="section-title">Principais Funcionalidades</h2>
+                    <p class="section-description">Recursos desenvolvidos para maximizar a eficiência energética da sua
+                        empresa</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-building dark-color-icon"></i></div>
+                        <h3>Cadastro Organizacional</h3>
+                        <p>Registre a estrutura completa da empresa: setores, salas e dispositivos para um controle
+                            detalhado do consumo.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-simple dark-color-icon"></i></div>
+                        <h3>Análise de Consumo</h3>
+                        <p>Monitore o consumo energético por dispositivo, sala ou setor com relatórios detalhados e
+                            precisos.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-dollar-sign dark-color-icon"></i></div>
+                        <h3>Impacto Financeiro</h3>
+                        <p>Calcule quanto cada dispositivo contribui para o custo total da conta de energia elétrica.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-brain dark-color-icon"></i></div>
+                        <h3>Relatórios Inteligentes</h3>
+                        <p>Gere relatórios por período: diário, semanal, mensal, semestral e anual para análise
+                            estratégica.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-pie dark-color-icon"></i></div>
+                        <h3>Rateio Energético</h3>
+                        <p>Visualize a proporção do consumo e custo por dispositivo, sala ou setor da empresa.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-grip dark-color-icon"></i></div>
+                        <h3>Dashboard Interativo</h3>
+                        <p>Interface intuitiva com gráficos e comparativos para apoiar decisões estratégicas de gestão.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="requirements-section" id="requisitos">
+            <div class="requirements-wrapper">
+              <div class="text-center">
+                <h2 class="section-title-dark">Recursos</h2>
+                <p class="section-description-dark">Tudo o que sua gestão precisa, em um só sistema</p>
+              </div>
+          
+              <div class="requirements-grid">
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Cadastro de estrutura organizacional completa</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Registro detalhado da conta de luz</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Associação de consumo aos dispositivos</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Cálculo automatizado do impacto financeiro</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Geração de relatórios por múltiplas periodicidades</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Relatórios de rateio por setor/sala/dispositivo</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Dashboards interativos e visualizações</div>
+                <div class="requirement-card"><i class="fa-solid fa-check primary-color-icon"></i>Exportação de dados para Excel</div>
+              </div>
+            </div>
+          </section>
+          
+
+        <section id="impacto">
+            <div class="impact-content">
+                <h2>Impacto Sustentável</h2>
+                <p>Nosso sistema contribui diretamente para a sustentabilidade empresarial e ambiental. Ao fornecer
+                    análises detalhadas do consumo energético, capacitamos gestores a identificar desperdícios, reduzir
+                    custos operacionais e implementar práticas mais eficientes.</p>
+                <p>Com o controle inteligente da energia, sua empresa não apenas economiza recursos financeiros, mas
+                    também reduz significativamente seu impacto ambiental, contribuindo para um futuro mais sustentável.
+                </p>
+                <div class="ods-badge">Alinhado com ODS 7 - Energia Acessível e Limpa</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; <b><a href=".">SAGE</a></b> - Sistema de Análise e Gerenciamento Energético
+    </footer>
+
+    <script src="src/javaScript/index.js"></script>
+</body>
+
+</html>
