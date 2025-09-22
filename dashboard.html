@@ -113,6 +113,28 @@
                         <div class="error-message" id="setorNome-error"></div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setorCodigo">Código do Setor *</label>
+                            <input type="text" id="setorCodigo" name="codigo" class="form-input"
+                                placeholder="Ex: ADM001" required pattern="[A-Z]{3}[0-9]{3}">
+                            <div class="error-message" id="setorCodigo-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="setorAndar">Andar *</label>
+                            <select id="setorAndar" name="andar" class="form-select" required>
+                                <option value="">Selecione o andar</option>
+                                <option value="terreo">Térreo</option>
+                                <option value="1">1º Andar</option>
+                                <option value="2">2º Andar</option>
+                                <option value="3">3º Andar</option>
+                                <option value="4">4º Andar</option>
+                                <option value="5">5º Andar</option>
+                            </select>
+                            <div class="error-message" id="setorAndar-error"></div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="setorResponsavel">Responsável pelo Setor *</label>
                         <input type="text" id="setorResponsavel" name="responsavel" class="form-input"
@@ -145,12 +167,27 @@
                         <div class="error-message" id="salaNome-error"></div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="salaCodigo">Código da Sala *</label>
+                            <input type="text" id="salaCodigo" name="codigo" class="form-input"
+                                placeholder="Ex: SALA001" required pattern="[A-Z]{4}[0-9]{3}">
+                            <div class="error-message" id="salaCodigo-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salaSetor">Setor *</label>
+                            <select id="salaSetor" name="setor" class="form-select" required>
+                                <option value="">Selecione o setor</option>
+                            </select>
+                            <div class="error-message" id="salaSetor-error"></div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="salaSetor">Setor *</label>
-                        <select id="salaSetor" name="setor" class="form-select" required>
-                            <option value="">Selecione o setor</option>
-                        </select>
-                        <div class="error-message" id="salaSetor-error"></div>
+                        <label for="salaArea">Área (m²) *</label>
+                        <input type="number" id="salaArea" name="area" class="form-input"
+                            placeholder="Área em metros quadrados" min="1" step="0.1" required>
+                        <div class="error-message" id="salaArea-error"></div>
                     </div>
 
                     <div class="form-group">
@@ -178,19 +215,27 @@
                         <div class="error-message" id="dispositivoNome-error"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="dispositivoTipo">Tipo de Dispositivo *</label>
-                        <select id="dispositivoTipo" name="tipo" class="form-select" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="sensor_temperatura">Sensor de Temperatura</option>
-                            <option value="sensor_umidade">Sensor de Umidade</option>
-                            <option value="sensor_luminosidade">Sensor de Luminosidade</option>
-                            <option value="medidor_energia">Medidor de Energia</option>
-                            <option value="controlador_ar">Controlador de Ar Condicionado</option>
-                            <option value="controlador_iluminacao">Controlador de Iluminação</option>
-                            <option value="gateway">Gateway IoT</option>
-                        </select>
-                        <div class="error-message" id="dispositivoTipo-error"></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dispositivoCodigo">Código do Dispositivo *</label>
+                            <input type="text" id="dispositivoCodigo" name="codigo" class="form-input"
+                                placeholder="Ex: DEV001" required pattern="[A-Z]{3}[0-9]{3}">
+                            <div class="error-message" id="dispositivoCodigo-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dispositivoTipo">Tipo de Dispositivo *</label>
+                            <select id="dispositivoTipo" name="tipo" class="form-select" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="sensor_temperatura">Sensor de Temperatura</option>
+                                <option value="sensor_umidade">Sensor de Umidade</option>
+                                <option value="sensor_luminosidade">Sensor de Luminosidade</option>
+                                <option value="medidor_energia">Medidor de Energia</option>
+                                <option value="controlador_ar">Controlador de Ar Condicionado</option>
+                                <option value="controlador_iluminacao">Controlador de Iluminação</option>
+                                <option value="gateway">Gateway IoT</option>
+                            </select>
+                            <div class="error-message" id="dispositivoTipo-error"></div>
+                        </div>
                     </div>
 
                     <div class="form-row-three">
@@ -213,6 +258,17 @@
                                 placeholder="Consumo em kWh" min="0" step="0.01" required>
                             <div class="error-message" id="dispositivoConsumo-error"></div>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dispositivoStatus">Status *</label>
+                        <select id="dispositivoStatus" name="status" class="form-select" required>
+                            <option value="">Selecione o status</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                            <option value="manutencao">Em Manutenção</option>
+                        </select>
+                        <div class="error-message" id="dispositivoStatus-error"></div>
                     </div>
 
                     <div class="form-group">

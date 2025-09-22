@@ -66,8 +66,7 @@ section {
 
     background-image: url("../images/bg1.jpg");
     background-size: cover;
-    background-position: center bottom;
-    /* Mostra a parte inferior da imagem */
+    background-position: center bottom; /* Mostra a parte inferior da imagem */
     background-repeat: no-repeat;
 
     /* Altura mínima para o home ocupar a tela inteira */
@@ -383,11 +382,11 @@ section {
     background-color: #f9f9f9;
 }
 
-.primary-color-icon {
+.primary-color-icon{
     color: var(--color-primary);
 }
 
-.dark-color-icon {
+.dark-color-icon{
     color: var(--color-bg);
 }
 
@@ -482,119 +481,6 @@ footer a:hover {
     background-color: #e6a400;
 }
 
-/* Seção de Gráficos */
-#graficos {
-    background: var(--color-bg-white);
-    color: var(--color-secondary);
-    flex-direction: column;
-    padding: 15vh 20px;
-}
-
-.charts-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 50px;
-    max-width: 1200px;
-    width: 100%;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 30px;
-    width: 100%;
-}
-
-.chart-card {
-    background: #ffffff;
-    border-radius: var(--radius);
-    padding: 30px 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.chart-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 183, 3, 0.05), transparent);
-    transition: left 0.6s ease;
-    z-index: 1;
-}
-
-.chart-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(255, 183, 3, 0.15);
-}
-
-.chart-card:hover::before {
-    left: 100%;
-}
-
-.chart-card h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--color-secondary);
-    margin-bottom: 20px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.chart-card canvas {
-    max-width: 100%;
-    height: 300px !important;
-    position: relative;
-    z-index: 2;
-}
-
-/* Responsividade para gráficos */
-@media (max-width: 768px) {
-    .charts-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .chart-card {
-        padding: 20px 15px;
-    }
-
-    .chart-card h3 {
-        font-size: 1.1rem;
-    }
-
-    .chart-card canvas {
-        height: 250px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-card canvas {
-        height: 220px !important;
-    }
-}
-
-/* Seção de Impacto */
-#impacto {
-    background: linear-gradient(135deg, var(--color-primary), #e6a400);
-    color: var(--color-secondary);
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
     .container {
@@ -632,7 +518,9 @@ footer a:hover {
     }
 }
 
-@media screen {}
+@media screen {
+    
+}
 
 /* Animações */
 @keyframes fadeInUp {
