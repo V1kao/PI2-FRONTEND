@@ -1,0 +1,123 @@
+/* Estilos para o botão ODS flutuante */
+.ods-floating-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1000;
+    width: 70px;
+    height: 70px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #FDB813;
+    padding: 8px;
+}
+
+.ods-floating-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(253, 184, 19, 0.4);
+}
+
+.ods-floating-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.ods-tooltip {
+    position: absolute;
+    left: 80px;
+    background: var(--color-secondary);
+    color: var(--color-text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.ods-tooltip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: var(--color-secondary);
+}
+
+.ods-floating-btn:hover .ods-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Estilos para o botão ODS na seção de impacto */
+.ods-badge-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 24, 36, 0.9);
+    color: var(--color-primary);
+    padding: 18px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-base);
+}
+
+.ods-badge-btn:hover {
+    background: rgba(0, 24, 36, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.ods-badge-btn img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .ods-floating-btn {
+        bottom: 20px;
+        left: 20px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .ods-floating-btn img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .ods-tooltip {
+        display: none;
+    }
+
+    .ods-badge-btn {
+        font-size: 1rem;
+        padding: 15px 25px;
+        gap: 12px;
+    }
+
+    .ods-badge-btn img {
+        width: 35px;
+        height: 35px;
+    }
+}
