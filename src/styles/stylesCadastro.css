@@ -332,7 +332,6 @@ body {
     transform: translateY(0);
 }
 
-/* Scrollbar - Copiado do style.css */
 ::-webkit-scrollbar {
     width: 7px;
 }
