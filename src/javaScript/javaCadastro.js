@@ -2,7 +2,10 @@
 const appState = {
     setores: [],
     salas: [],
-    dispositivos: []
+    dispositivos: [],
+    empresas: [],
+    admins: [],
+    currentCompanyCode: null
 };
 
 // DOM Elements
@@ -12,6 +15,48 @@ const mobileOverlay = document.getElementById('mobileOverlay');
 const navLinks = document.querySelectorAll('.nav-link');
 const contentSections = document.querySelectorAll('.content-section');
 const notification = document.getElementById('notification');
+
+// Initialize with test data
+function initializeTestData() {
+    const savedData = localStorage.getItem('lumenlabs_data');
+
+    // Only create test data if there's no saved data
+    if (!savedData || savedData === '{}') {
+        // Test Company: Lumen Labs
+        const testCompany = {
+            id: 'test-company-001',
+            nome: 'Lumen Labs',
+            cnpj: '12.345.678/0001-90',
+            codigo: 'LUMEN2025',
+            segmento: 'tecnologia',
+            email: 'contato@lumenlabs.com.br',
+            telefone: '(11) 98765-4321',
+            cep: '13500-000',
+            cidade: 'Rio Claro',
+            estado: 'SP',
+            endereco: 'Av. da Tecnologia, 1000, Centro',
+            descricao: 'Empresa de tecnologia e inovação em gestão energética',
+            dataCriacao: new Date().toISOString()
+        };
+
+        // Test Admin for Lumen Labs
+        const testAdmin = {
+            id: 'test-admin-001',
+            nomeCompleto: 'Carlos Silva',
+            email: 'admin@lumenlabs.com.br',
+            cpf: '123.456.789-00',
+            senha: 'admin123',
+            codigoEmpresa: 'LUMEN2025',
+            dataCriacao: new Date().toISOString()
+        };
+
+        appState.empresas = [testCompany];
+        appState.admins = [testAdmin];
+
+        saveToLocalStorage();
+        console.log('Dados de teste criados: Empresa Lumen Labs e Admin Carlos Silva');
+    }
+}
 
 //Abrir cadastros
 
@@ -31,7 +76,7 @@ function showForm(role) {
     const companyCodeInput = document.getElementById('companyCode');
 
     // Verificar se todos os elementos existem
-    if (!buttonContainer || !formContainer || !signupContainer || 
+    if (!buttonContainer || !formContainer || !signupContainer ||
         !formTitle || !formSubtitle || !companyCodeGroup || !companyCodeInput) {
         console.error('Alguns elementos HTML necessários não foram encontrados');
         return;
@@ -64,12 +109,12 @@ function showForm(role) {
 function hideForm() {
     hideAllContainers();
     showMainButtons();
-    
+
     const registrationForm = document.getElementById('registrationForm');
     if (registrationForm) {
         registrationForm.reset();
     }
-    
+
     const companyCodeGroup = document.getElementById('companyCodeGroup');
     if (companyCodeGroup) {
         companyCodeGroup.classList.remove('show');
@@ -133,11 +178,15 @@ function hideAllContainers() {
     const formContainer = document.getElementById('formContainer');
     const signupContainer = document.getElementById('signupContainer');
     const companyFormContainer = document.getElementById('companyFormContainer');
+    const companyLoginContainer = document.getElementById('companyLoginContainer');
+    const adminSignupContainer = document.getElementById('adminSignupContainer');
 
     if (buttonContainer) buttonContainer.style.display = 'none';
     if (formContainer) formContainer.classList.remove('active');
     if (signupContainer) signupContainer.classList.remove('active');
     if (companyFormContainer) companyFormContainer.classList.remove('active');
+    if (companyLoginContainer) companyLoginContainer.classList.remove('active');
+    if (adminSignupContainer) adminSignupContainer.classList.remove('active');
 }
 
 function showMainButtons() {
@@ -156,12 +205,68 @@ function resetCompanyForm() {
     const companySubmitBtn = document.getElementById('companySubmitBtn');
 
     if (companyForm) companyForm.reset();
-    
+
     editingCompanyId = null;
-    
+
     if (companyFormTitle) companyFormTitle.textContent = 'Cadastrar Nova Empresa';
     if (companyFormSubtitle) companyFormSubtitle.textContent = 'Preencha os dados da empresa';
     if (companySubmitBtn) companySubmitBtn.textContent = 'Cadastrar Empresa';
+}
+
+// Company Login Functions
+function showCompanyRegistration() {
+    hideAllContainers();
+    const companyFormContainer = document.getElementById('companyFormContainer');
+    const companyLoginContainer = document.getElementById('companyLoginContainer');
+
+    if (companyFormContainer) {
+        companyLoginContainer.classList.remove('active');
+        setTimeout(() => {
+            companyFormContainer.classList.add('active');
+        }, 300);
+    }
+}
+
+function backToCompanyLogin() {
+    hideAllContainers();
+    const companyLoginContainer = document.getElementById('companyLoginContainer');
+
+    if (companyLoginContainer) {
+        setTimeout(() => {
+            companyLoginContainer.classList.add('active');
+        }, 300);
+    }
+
+    resetCompanyForm();
+}
+
+function showAdminSignup() {
+    const formContainer = document.getElementById('formContainer');
+    const adminSignupContainer = document.getElementById('adminSignupContainer');
+
+    if (formContainer && adminSignupContainer) {
+        formContainer.classList.remove('active');
+        setTimeout(() => {
+            adminSignupContainer.classList.add('active');
+        }, 300);
+    }
+}
+
+function backToAdminLogin() {
+    const formContainer = document.getElementById('formContainer');
+    const adminSignupContainer = document.getElementById('adminSignupContainer');
+
+    if (formContainer && adminSignupContainer) {
+        adminSignupContainer.classList.remove('active');
+        setTimeout(() => {
+            formContainer.classList.add('active');
+        }, 300);
+    }
+
+    const adminSignupForm = document.getElementById('adminSignupForm');
+    if (adminSignupForm) {
+        adminSignupForm.reset();
+    }
 }
 
 // Utility Functions
@@ -298,6 +403,9 @@ function loadFromLocalStorage() {
             appState.setores = data.setores || [];
             appState.salas = data.salas || [];
             appState.dispositivos = data.dispositivos || [];
+            appState.empresas = data.empresas || [];
+            appState.admins = data.admins || [];
+            appState.currentCompanyCode = data.currentCompanyCode || null;
             updateStats();
             updateSelectOptions();
         }
@@ -374,6 +482,187 @@ function setupEventListeners() {
 
 // Form Submission Handlers
 function setupFormHandlers() {
+    // Company Login Form
+    const companyLoginForm = document.getElementById('companyLoginForm');
+    if (companyLoginForm) {
+        companyLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const companyCode = document.getElementById('companyLoginCode').value.trim().toUpperCase();
+
+            // Check if company exists
+            const company = appState.empresas.find(emp => emp.codigo === companyCode);
+
+            if (company) {
+                appState.currentCompanyCode = companyCode;
+                saveToLocalStorage();
+
+                // Show admin login
+                hideAllContainers();
+                const formContainer = document.getElementById('formContainer');
+                if (formContainer) {
+                    setTimeout(() => {
+                        formContainer.classList.add('active');
+                    }, 300);
+                }
+
+                showNotification(`Bem-vindo à ${company.nome}!`, 'success');
+            } else {
+                showNotification('Código de empresa não encontrado!', 'error');
+            }
+        });
+    }
+
+    // Company Registration Form
+    const companyForm = document.getElementById('companyForm');
+    if (companyForm) {
+        companyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!validateForm(companyForm)) {
+                showNotification('Por favor, corrija os erros no formulário', 'error');
+                return;
+            }
+
+            const companyCode = document.getElementById('companyCodeField').value.trim().toUpperCase();
+            const cnpj = document.getElementById('companyCnpj').value.trim();
+
+            // Check for duplicate codes
+            const duplicateCode = appState.empresas.find(emp => emp.codigo === companyCode);
+            if (duplicateCode) {
+                showNotification('Código de empresa já existe! Use um código diferente.', 'error');
+                return;
+            }
+
+            // Check for duplicate CNPJ
+            const duplicateCnpj = appState.empresas.find(emp => emp.cnpj === cnpj);
+            if (duplicateCnpj) {
+                showNotification('CNPJ já cadastrado!', 'error');
+                return;
+            }
+
+            const formData = {
+                id: generateUniqueId(),
+                nome: document.getElementById('companyName').value.trim(),
+                cnpj: cnpj,
+                codigo: companyCode,
+                segmento: document.getElementById('segment').value,
+                email: document.getElementById('companyEmail').value.trim(),
+                telefone: document.getElementById('phone').value.trim(),
+                cep: document.getElementById('cep').value.trim(),
+                cidade: document.getElementById('city').value.trim(),
+                estado: document.getElementById('state').value,
+                endereco: document.getElementById('address').value.trim(),
+                descricao: document.getElementById('description').value.trim(),
+                dataCriacao: new Date().toISOString()
+            };
+
+            appState.empresas.push(formData);
+            appState.currentCompanyCode = companyCode;
+            saveToLocalStorage();
+
+            showNotification(`Empresa "${formData.nome}" cadastrada com sucesso!`, 'success');
+
+            // Redirect to admin login after 1.5s
+            setTimeout(() => {
+                hideAllContainers();
+                const formContainer = document.getElementById('formContainer');
+                if (formContainer) {
+                    formContainer.classList.add('active');
+                }
+            }, 1500);
+        });
+    }
+
+    // Admin Login Form
+    const registrationForm = document.getElementById('registrationForm');
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Find admin with matching email and company code
+            const admin = appState.admins.find(adm =>
+                adm.email === email &&
+                adm.codigoEmpresa === appState.currentCompanyCode &&
+                adm.senha === password
+            );
+
+            if (admin) {
+                showNotification('Login realizado com sucesso! Redirecionando...', 'success');
+
+                // Redirect to dashboard after 1.5s
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } else {
+                showNotification('Email ou senha incorretos!', 'error');
+            }
+        });
+    }
+
+    // Admin Signup Form
+    const adminSignupForm = document.getElementById('adminSignupForm');
+    if (adminSignupForm) {
+        adminSignupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!validateForm(adminSignupForm)) {
+                showNotification('Por favor, corrija os erros no formulário', 'error');
+                return;
+            }
+
+            const password = document.getElementById('adminPassword').value;
+            const confirmPassword = document.getElementById('adminConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('As senhas não coincidem!', 'error');
+                return;
+            }
+
+            const email = document.getElementById('adminEmail').value.trim();
+            const cpf = document.getElementById('adminCpf').value.trim();
+
+            // Check for duplicate email in same company
+            const duplicateEmail = appState.admins.find(adm =>
+                adm.email === email && adm.codigoEmpresa === appState.currentCompanyCode
+            );
+            if (duplicateEmail) {
+                showNotification('Email já cadastrado nesta empresa!', 'error');
+                return;
+            }
+
+            // Check for duplicate CPF
+            const duplicateCpf = appState.admins.find(adm => adm.cpf === cpf);
+            if (duplicateCpf) {
+                showNotification('CPF já cadastrado!', 'error');
+                return;
+            }
+
+            const formData = {
+                id: generateUniqueId(),
+                nomeCompleto: document.getElementById('adminFullName').value.trim(),
+                email: email,
+                cpf: cpf,
+                senha: password,
+                codigoEmpresa: appState.currentCompanyCode,
+                dataCriacao: new Date().toISOString()
+            };
+
+            appState.admins.push(formData);
+            saveToLocalStorage();
+
+            showNotification(`Conta criada com sucesso! Redirecionando para o dashboard...`, 'success');
+
+            // Redirect to dashboard after 1.5s
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    }
+
     // Setor Form
     const setorForm = document.getElementById('setorForm');
     if (setorForm) {
@@ -508,6 +797,7 @@ function setupResponsiveHandlers() {
 // Initialize Application
 function initApp() {
     loadFromLocalStorage();
+    initializeTestData(); // Create test data if needed
     setupEventListeners();
     setupFormHandlers();
     setupResponsiveHandlers();

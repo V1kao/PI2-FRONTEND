@@ -5,21 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="src/styles/stylesCadastro.css">
+    <link rel="stylesheet" href="src/styles/cadastroBotaoVoltar.css">
 
-    <title>Cadastro</title>
+    <title>Cadastro - SAGE</title>
 
 </head>
 
 <body>
+    <!-- Notificação -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Botão de Voltar -->
+    <a href="#" class="back-button-cadastro" onclick="history.back(); return false;">
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
+
     <div class="container">
         <div class="header">
-            <h1>Energia Sustentável</h1>
-            <p>Sistema de Cadastro</p>
+            <h1>SAGE</h1>
+            <p>Sistema de Gestão Energética</p>
         </div>
 
-        <!-- Menu Principal -->
-        <div class="button-container" id="buttonContainer">
+        <!-- Menu Principal (OCULTO - não usado mais) -->
+        <div class="button-container" id="buttonContainer" style="display: none;">
             <button class="role-button" onclick="showForm('admin')">
                 Administrador
             </button>
@@ -31,20 +44,40 @@
             </button>
         </div>
 
-        <!-- Formulário de Login -->
+        <!-- Formulário de Login da Empresa (PRIMEIRA TELA) -->
+        <div class="form-container active" id="companyLoginContainer">
+            <div class="form-header">
+                <h2>Login da Empresa</h2>
+                <p>Digite o código da sua empresa para continuar</p>
+            </div>
+
+            <form id="companyLoginForm">
+                <div class="form-group">
+                    <label for="companyLoginCode">Código da Empresa *</label>
+                    <input type="text" id="companyLoginCode" class="form-input" placeholder="Digite o código da empresa"
+                        required maxlength="20">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Continuar
+                </button>
+
+                <div class="signup-link">
+                    <p>Sua empresa ainda não está cadastrada?
+                        <a href="#" onclick="showCompanyRegistration()" class="signup-btn">Cadastre aqui</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulário de Login do Admin (SEGUNDA TELA) -->
         <div class="form-container" id="formContainer">
             <div class="form-header">
-                <h2 id="formTitle">Login</h2>
-                <p id="formSubtitle">Preencha seus dados</p>
+                <h2 id="formTitle">Login Administrador</h2>
+                <p id="formSubtitle">Acesso ao sistema de gestão</p>
             </div>
 
             <form id="registrationForm">
-                <div class="form-group company-code-group" id="companyCodeGroup" style="display: none;">
-                    <label for="companyCode">Código da Empresa</label>
-                    <input type="text" id="companyCode" class="form-input" placeholder="Digite o código da empresa"
-                        maxlength="20">
-                </div>
-
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
@@ -56,22 +89,69 @@
                 </div>
 
                 <button type="submit" class="submit-btn">
-                    Entrar
+                    Entrar no Dashboard
                 </button>
 
-                <button type="button" class="back-btn" onclick="hideForm()">
+                <button type="button" class="back-btn" onclick="backToCompanyLogin()">
                     ← Voltar
                 </button>
 
                 <div class="signup-link">
-                    <p>Não tem uma conta? <a href="#" onclick="showSignupForm()" class="signup-btn">Cadastre-se aqui</a>
+                    <p>Primeiro acesso? <a href="#" onclick="showAdminSignup()" class="signup-btn">Cadastre-se aqui</a>
                     </p>
                 </div>
             </form>
         </div>
 
-        <!-- Formulário de Cadastro de Usuário -->
-        <div class="form-container" id="signupContainer">
+        <!-- Formulário de Cadastro de Admin -->
+        <div class="form-container" id="adminSignupContainer">
+            <div class="form-header">
+                <h2>Cadastro de Administrador</h2>
+                <p>Preencha todos os dados para criar sua conta</p>
+            </div>
+
+            <form id="adminSignupForm">
+                <div class="form-group">
+                    <label for="adminFullName">Nome Completo *</label>
+                    <input type="text" id="adminFullName" class="form-input" placeholder="Digite seu nome completo"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminEmail">Email *</label>
+                    <input type="email" id="adminEmail" class="form-input" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminCpf">CPF *</label>
+                    <input type="text" id="adminCpf" class="form-input" placeholder="000.000.000-00" required
+                        maxlength="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">Senha *</label>
+                    <input type="password" id="adminPassword" class="form-input" placeholder="Digite sua senha" required
+                        minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="adminConfirmPassword">Confirmar Senha *</label>
+                    <input type="password" id="adminConfirmPassword" class="form-input" placeholder="Confirme sua senha"
+                        required minlength="6">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Criar Conta e Acessar Dashboard
+                </button>
+
+                <button type="button" class="back-btn" onclick="backToAdminLogin()">
+                    ← Voltar ao Login
+                </button>
+            </form>
+        </div>
+
+        <!-- Formulário de Cadastro de Usuário Normal (OCULTO - mantido no código) -->
+        <div class="form-container" id="signupContainer" style="display: none;">
             <div class="form-header">
                 <h2>Criar Nova Conta</h2>
                 <p>Preencha todos os dados para se cadastrar</p>
@@ -159,11 +239,12 @@
                         <label for="segment">Segmento *</label>
                         <select id="segment" class="form-select" required>
                             <option value="">Selecione o segmento</option>
-                            <option value="energia_solar">Energia Solar</option>
-                            <option value="energia_eolica">Energia Eólica</option>
-                            <option value="bioenergia">Bioenergia</option>
-                            <option value="hidroeletrica">Hidrelétrica</option>
-                            <option value="consultoria">Consultoria</option>
+                            <option value="tecnologia">Tecnologia</option>
+                            <option value="industria">Indústria</option>
+                            <option value="comercio">Comércio</option>
+                            <option value="servicos">Serviços</option>
+                            <option value="educacao">Educação</option>
+                            <option value="saude">Saúde</option>
                             <option value="outro">Outro</option>
                         </select>
                     </div>
@@ -194,33 +275,22 @@
                         <label for="state">Estado *</label>
                         <select id="state" class="form-select" required>
                             <option value="">Selecione o estado</option>
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="MG">Minas Gerais</option>
                             <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
+                            <option value="PR">Paraná</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="SC">Santa Catarina</option>
                             <option value="ES">Espírito Santo</option>
+                            <option value="DF">Distrito Federal</option>
                             <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
                             <option value="MT">Mato Grosso</option>
                             <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
                             <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
+                            <option value="CE">Ceará</option>
+                            <option value="PA">Pará</option>
+                            <option value="AM">Amazonas</option>
                         </select>
                     </div>
                 </div>
@@ -239,7 +309,7 @@
                     Cadastrar Empresa
                 </button>
 
-                <button type="button" class="back-btn" onclick="hideCompanyForm()">
+                <button type="button" class="back-btn" onclick="backToCompanyLogin()">
                     ← Voltar
                 </button>
             </form>
@@ -247,7 +317,7 @@
     </div>
 
     <script src="src/javaScript/javaCadastro.js"></script>
+    <script src="src/javaScript/cadastroBotaoVoltar.js"></script>
 </body>
-
 
 </html>
