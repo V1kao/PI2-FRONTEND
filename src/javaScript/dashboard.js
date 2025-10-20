@@ -4,19 +4,16 @@ const appState = {
         {
             id: 1,
             nome: 'Administrativo',
-            responsavel: 'João Silva',
             descricao: 'Setor responsável pela gestão administrativa da empresa'
         },
         {
             id: 2,
             nome: 'Produção',
-            responsavel: 'Maria Santos',
             descricao: 'Setor de produção e manufatura'
         },
         {
             id: 3,
             nome: 'TI',
-            responsavel: 'Carlos Oliveira',
             descricao: 'Tecnologia da Informação e suporte técnico'
         }
     ],
@@ -109,176 +106,45 @@ const appState = {
             consumo: 600,
             descricao: '8 estações de trabalho high-end'
         }
-    ]
-};
-
-// Mapeamento de tipos de gráficos disponíveis para cada relatório
-const chartTypesConfig = {
-    'consumo-setor': {
-        name: 'Consumo Mensal por Setor',
-        types: [
-            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' },
-            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
-            { id: 'mixed', icon: 'fa-chart-area', label: 'Gráfico Misto' }
-        ]
-    },
-    'economia': {
-        name: 'Economia Alcançada (%)',
-        types: [
-            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
-            { id: 'area', icon: 'fa-chart-area', label: 'Gráfico de Área' },
-            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' }
-        ]
-    },
-    'custos': {
-        name: 'Custos por Dispositivo',
-        types: [
-            { id: 'doughnut', icon: 'fa-chart-pie', label: 'Gráfico de Rosca' },
-            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' },
-            { id: 'bubble', icon: 'fa-circle', label: 'Gráfico de Bolhas' }
-        ]
-    },
-    'evolucao': {
-        name: 'Evolução do Consumo Anual',
-        types: [
-            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
-            { id: 'area', icon: 'fa-chart-area', label: 'Gráfico de Área' },
-            { id: 'mixed', icon: 'fa-chart-area', label: 'Gráfico Misto' }
-        ]
+    ],
+    contaLuz: {
+        valor: 0,
+        mes: '',
+        ano: ''
     }
 };
 
-// Armazenar instâncias dos gráficos
-let chartInstances = {};
-let currentReportType = null;
-
-// DOM Elements
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const mobileOverlay = document.getElementById('mobileOverlay');
-const navLinks = document.querySelectorAll('.nav-link');
-const contentSections = document.querySelectorAll('.content-section');
-const notification = document.getElementById('notification');
-const editModal = document.getElementById('editModal');
-const modalClose = document.getElementById('modalClose');
-
-// Reports Elements
-const reportsToggleBtn = document.getElementById('reportsToggleBtn');
-const reportsContainer = document.getElementById('reportsContainer');
-const closeReportsBtn = document.getElementById('closeReportsBtn');
-const reportBtns = document.querySelectorAll('.report-btn');
-
-// View tabs
-const viewTabs = document.querySelectorAll('.view-tab');
-const viewContents = document.querySelectorAll('.view-content');
-
-// Menu Toggle Functionality
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('expanded');
-
-        if (window.innerWidth <= 768) {
-            mobileOverlay.classList.toggle('active');
-        }
-    });
+// No início do arquivo, após a definição do appState, adicione:
+function loadBillData() {
+    // Carregar dados salvos da conta de luz nos campos
+    document.getElementById('billValue').value = appState.contaLuz.valor || '';
+    document.getElementById('billMonth').value = appState.contaLuz.mes || '';
+    document.getElementById('billYear').value = appState.contaLuz.ano || '';
 }
 
-// Close mobile menu when clicking overlay
-if (mobileOverlay) {
-    mobileOverlay.addEventListener('click', () => {
-        sidebar.classList.remove('expanded');
-        mobileOverlay.classList.remove('active');
-    });
+function saveBillData() {
+    // Salvar dados da conta de luz
+    const billValue = document.getElementById('billValue');
+    const billMonth = document.getElementById('billMonth');
+    const billYear = document.getElementById('billYear');
+
+    appState.contaLuz.valor = billValue.value ? parseFloat(billValue.value) : 0;
+    appState.contaLuz.mes = billMonth.value;
+    appState.contaLuz.ano = billYear.value;
 }
 
-// Navigation
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-
-        contentSections.forEach(section => section.classList.remove('active'));
-
-        const targetSection = link.getAttribute('data-section');
-        const targetElement = document.getElementById(targetSection);
-        if (targetElement) {
-            targetElement.classList.add('active');
-
-            // Se for a seção de visualizar, renderizar listas
-            if (targetSection === 'visualizar') {
-                renderAllLists();
-            }
-        }
-
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove('expanded');
-            mobileOverlay.classList.remove('active');
-        }
-    });
-});
-
-// View Tabs
-viewTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        viewTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        viewContents.forEach(content => content.classList.remove('active'));
-
-        const targetView = tab.getAttribute('data-tab');
-        const targetElement = document.getElementById(targetView);
-        if (targetElement) {
-            targetElement.classList.add('active');
-        }
-    });
-});
-
-// Reports Functionality
-if (reportsToggleBtn) {
-    reportsToggleBtn.addEventListener('click', () => {
-        reportsContainer.classList.toggle('active');
-    });
-}
-
-if (closeReportsBtn) {
-    closeReportsBtn.addEventListener('click', () => {
-        reportsContainer.classList.remove('active');
-        hideChartOptions();
-        hideGeneratedCharts();
-    });
-}
-
-// Report Buttons
-reportBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const reportType = btn.getAttribute('data-report');
-
-        // Se clicar no mesmo botão, toggle
-        if (currentReportType === reportType) {
-            hideChartOptions();
-            currentReportType = null;
-        } else {
-            generateReportOptions(reportType);
-            currentReportType = reportType;
-        }
-    });
-});
-
+// Modificar a função generateReportOptions para ser mais simples:
 function generateReportOptions(type) {
     const config = chartTypesConfig[type];
-
     if (!config) {
         showNotification('Tipo de relatório não encontrado!', 'error');
         return;
     }
 
-    // Remover opções anteriores
     hideChartOptions();
     hideGeneratedCharts();
+    drilldownStack = [];
 
-    // Criar container de opções
     const optionsContainer = document.createElement('div');
     optionsContainer.id = 'chartOptionsContainer';
     optionsContainer.className = 'chart-options-container';
@@ -304,17 +170,422 @@ function generateReportOptions(type) {
             <button class="btn-secondary" onclick="hideChartOptions()">
                 <i class="fas fa-times"></i> Cancelar
             </button>
+            <button class="btn-primary" onclick="validateAndGenerateCharts('${type}')">
+                <i class="fas fa-chart-line"></i> Gerar Gráficos
+            </button>
+        </div>
+    `;
+
+    const reportsGrid = document.querySelector('.reports-grid');
+    reportsGrid.insertAdjacentElement('afterend', optionsContainer);
+
+    setTimeout(() => {
+        optionsContainer.classList.add('active');
+    }, 10);
+}
+
+// Nova função para validar e gerar gráficos
+function validateAndGenerateCharts(reportType) {
+    const config = chartTypesConfig[reportType];
+    const selectedInputs = document.querySelectorAll('input[name="chartTypes"]:checked');
+
+    if (selectedInputs.length === 0) {
+        showNotification('Selecione pelo menos um tipo de gráfico!', 'warning');
+        return;
+    }
+
+    // Validar dados da conta se necessário
+    if (config.needsBillValue) {
+        if (!validateBillData()) {
+            showNotification('Por favor, preencha todos os campos da conta de luz!', 'error');
+            return;
+        }
+        saveBillData();
+    }
+
+    const selectedCharts = Array.from(selectedInputs).map(input => ({
+        type: input.value,
+        label: input.getAttribute('data-label')
+    }));
+
+    currentChartsConfig = {
+        reportType,
+        selectedCharts,
+        config
+    };
+
+    hideChartOptions();
+    hideGeneratedCharts();
+    drilldownStack = [];
+
+    _renderCharts();
+}
+
+// Função para validar dados da conta
+function validateBillData() {
+    const billValue = document.getElementById('billValue');
+    const billMonth = document.getElementById('billMonth');
+    const billYear = document.getElementById('billYear');
+
+    let isValid = true;
+
+    // Validar valor
+    if (!billValue.value || parseFloat(billValue.value) <= 0) {
+        billValue.classList.add('invalid');
+        document.getElementById('billValue-error').textContent = 'Valor da conta é obrigatório';
+        document.getElementById('billValue-error').classList.add('show');
+        isValid = false;
+    } else {
+        billValue.classList.remove('invalid');
+        document.getElementById('billValue-error').classList.remove('show');
+    }
+
+    // Validar mês
+    if (!billMonth.value) {
+        billMonth.classList.add('invalid');
+        document.getElementById('billMonth-error').textContent = 'Mês é obrigatório';
+        document.getElementById('billMonth-error').classList.add('show');
+        isValid = false;
+    } else {
+        billMonth.classList.remove('invalid');
+        document.getElementById('billMonth-error').classList.remove('show');
+    }
+
+    // Validar ano
+    if (!billYear.value) {
+        billYear.classList.add('invalid');
+        document.getElementById('billYear-error').textContent = 'Ano é obrigatório';
+        document.getElementById('billYear-error').classList.add('show');
+        isValid = false;
+    } else {
+        billYear.classList.remove('invalid');
+        document.getElementById('billYear-error').classList.remove('show');
+    }
+
+    return isValid;
+}
+
+// Adicionar event listeners para validação em tempo real
+document.addEventListener('DOMContentLoaded', function () {
+    // Carregar dados salvos
+    loadBillData();
+
+    // Adicionar validação em tempo real para os campos da conta
+    const billInputs = ['billValue', 'billMonth', 'billYear'];
+    billInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('blur', function () {
+                validateBillData();
+            });
+        }
+    });
+
+    // Resto do código de inicialização...
+    updateStats();
+    updateSelectOptions();
+    renderAllLists();
+});
+
+// Remover a função generateCharts antiga e manter apenas _renderCharts
+// A função generateCharts foi substituída por validateAndGenerateCharts
+
+// No final do DOMContentLoaded, adicione a chamada para loadBillData:
+document.addEventListener('DOMContentLoaded', () => {
+    updateStats();
+    updateSelectOptions();
+    renderAllLists();
+    loadBillData(); // ← Adicionar esta linha
+});
+
+// Funções para calcular dados dinâmicos baseados no appState
+function getConsumoBySetor() {
+    const consumoMap = {};
+
+    appState.setores.forEach(setor => {
+        consumoMap[setor.id] = 0;
+    });
+
+    appState.dispositivos.forEach(disp => {
+        const sala = appState.salas.find(s => s.id == disp.sala);
+        if (sala) {
+            if (!consumoMap[sala.setor]) {
+                consumoMap[sala.setor] = 0;
+            }
+            consumoMap[sala.setor] += disp.consumo;
+        }
+    });
+
+    return consumoMap;
+}
+
+function getDispositivosBySetor(setorId) {
+    const salasDosetor = appState.salas.filter(s => s.setor == setorId);
+    const dispositivosDosetor = appState.dispositivos.filter(d =>
+        salasDosetor.some(s => s.id == d.sala)
+    );
+    return dispositivosDosetor.sort((a, b) => b.consumo - a.consumo);
+}
+
+function getConsumoByDispositivo() {
+    const totalConsumo = appState.dispositivos.reduce((sum, dev) => sum + dev.consumo, 0);
+    return appState.dispositivos.map(d => ({
+        ...d,
+        percentual: (d.consumo / totalConsumo * 100).toFixed(1)
+    }));
+}
+
+const themeColors = {
+    primary: '#ffb703',
+    primaryBg: '#ffd966',
+    secondary: '#001824',
+    success: '#10b981',
+    info: '#3b82f6'
+};
+
+const chartColors = [
+    themeColors.primary,
+    themeColors.primaryBg,
+    themeColors.secondary,
+    themeColors.success,
+    themeColors.info,
+    '#e6a400',
+    '#ff8500',
+    '#0077be'
+];
+
+const chartTypesConfig = {
+    'consumo-setor': {
+        name: 'Consumo Mensal por Setor',
+        needsBillValue: false,
+        types: [
+            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' },
+            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
+            { id: 'mixed', icon: 'fa-chart-area', label: 'Gráfico Misto' }
+        ]
+    },
+    'economia': {
+        name: 'Economia Alcançada (%)',
+        needsBillValue: true,
+        types: [
+            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
+            { id: 'area', icon: 'fa-chart-area', label: 'Gráfico de Área' },
+            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' }
+        ]
+    },
+    'custos': {
+        name: 'Custos por Dispositivo',
+        needsBillValue: true,
+        types: [
+            { id: 'doughnut', icon: 'fa-chart-pie', label: 'Gráfico de Rosca' },
+            { id: 'bar', icon: 'fa-chart-bar', label: 'Gráfico de Barras' },
+            { id: 'bubble', icon: 'fa-circle', label: 'Gráfico de Bolhas' }
+        ]
+    },
+    'evolucao': {
+        name: 'Evolução do Consumo Anual',
+        needsBillValue: false,
+        types: [
+            { id: 'line', icon: 'fa-chart-line', label: 'Gráfico de Linhas' },
+            { id: 'area', icon: 'fa-chart-area', label: 'Gráfico de Área' },
+            { id: 'mixed', icon: 'fa-chart-area', label: 'Gráfico Misto' }
+        ]
+    }
+};
+
+let chartInstances = {};
+let currentReportType = null;
+let drilldownStack = [];
+
+// DOM Elements
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const mobileOverlay = document.getElementById('mobileOverlay');
+const navLinks = document.querySelectorAll('.nav-link');
+const contentSections = document.querySelectorAll('.content-section');
+const notification = document.getElementById('notification');
+const editModal = document.getElementById('editModal');
+const modalClose = document.getElementById('modalClose');
+
+const reportsToggleBtn = document.getElementById('reportsToggleBtn');
+const reportsContainer = document.getElementById('reportsContainer');
+const closeReportsBtn = document.getElementById('closeReportsBtn');
+const reportBtns = document.querySelectorAll('.report-btn');
+
+const viewTabs = document.querySelectorAll('.view-tab');
+const viewContents = document.querySelectorAll('.view-content');
+
+// Menu Toggle Functionality
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('expanded');
+        if (window.innerWidth <= 768) {
+            mobileOverlay.classList.toggle('active');
+        }
+    });
+}
+
+if (mobileOverlay) {
+    mobileOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('expanded');
+        mobileOverlay.classList.remove('active');
+    });
+}
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        contentSections.forEach(section => section.classList.remove('active'));
+
+        const targetSection = link.getAttribute('data-section');
+        const targetElement = document.getElementById(targetSection);
+        if (targetElement) {
+            targetElement.classList.add('active');
+            if (targetSection === 'visualizar') {
+                renderAllLists();
+            }
+        }
+
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('expanded');
+            mobileOverlay.classList.remove('active');
+        }
+    });
+});
+
+viewTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        viewTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        viewContents.forEach(content => content.classList.remove('active'));
+
+        const targetView = tab.getAttribute('data-tab');
+        const targetElement = document.getElementById(targetView);
+        if (targetElement) {
+            targetElement.classList.add('active');
+        }
+    });
+});
+
+if (reportsToggleBtn) {
+    reportsToggleBtn.addEventListener('click', () => {
+        reportsContainer.classList.toggle('active');
+    });
+}
+
+if (closeReportsBtn) {
+    closeReportsBtn.addEventListener('click', () => {
+        reportsContainer.classList.remove('active');
+        hideChartOptions();
+        hideGeneratedCharts();
+        drilldownStack = [];
+    });
+}
+
+reportBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const reportType = btn.getAttribute('data-report');
+        if (currentReportType === reportType) {
+            hideChartOptions();
+            currentReportType = null;
+        } else {
+            generateReportOptions(reportType);
+            currentReportType = reportType;
+        }
+    });
+});
+
+function generateReportOptions(type) {
+    const config = chartTypesConfig[type];
+    if (!config) {
+        showNotification('Tipo de relatório não encontrado!', 'error');
+        return;
+    }
+
+    hideChartOptions();
+    hideGeneratedCharts();
+    drilldownStack = [];
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.id = 'chartOptionsContainer';
+    optionsContainer.className = 'chart-options-container';
+
+    // Campo de valor da conta (apenas se necessário)
+    let billValueHTML = '';
+    if (config.needsBillValue) {
+        billValueHTML = `
+            <div class="bill-value-inputs">
+                <div class="bill-value-header">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h5>Informações da Conta de Luz</h5>
+                </div>
+                <div class="bill-inputs-grid">
+                    <div class="bill-input-group">
+                        <label for="billValue">Valor da Conta (R$)</label>
+                        <input type="number" id="billValue" placeholder="Ex: 1500.00" 
+                               step="0.01" min="0" value="${appState.contaLuz.valor || ''}">
+                    </div>
+                    <div class="bill-input-group">
+                        <label for="billMonth">Mês</label>
+                        <select id="billMonth">
+                            <option value="">Selecione</option>
+                            <option value="01" ${appState.contaLuz.mes === '01' ? 'selected' : ''}>Janeiro</option>
+                            <option value="02" ${appState.contaLuz.mes === '02' ? 'selected' : ''}>Fevereiro</option>
+                            <option value="03" ${appState.contaLuz.mes === '03' ? 'selected' : ''}>Março</option>
+                            <option value="04" ${appState.contaLuz.mes === '04' ? 'selected' : ''}>Abril</option>
+                            <option value="05" ${appState.contaLuz.mes === '05' ? 'selected' : ''}>Maio</option>
+                            <option value="06" ${appState.contaLuz.mes === '06' ? 'selected' : ''}>Junho</option>
+                            <option value="07" ${appState.contaLuz.mes === '07' ? 'selected' : ''}>Julho</option>
+                            <option value="08" ${appState.contaLuz.mes === '08' ? 'selected' : ''}>Agosto</option>
+                            <option value="09" ${appState.contaLuz.mes === '09' ? 'selected' : ''}>Setembro</option>
+                            <option value="10" ${appState.contaLuz.mes === '10' ? 'selected' : ''}>Outubro</option>
+                            <option value="11" ${appState.contaLuz.mes === '11' ? 'selected' : ''}>Novembro</option>
+                            <option value="12" ${appState.contaLuz.mes === '12' ? 'selected' : ''}>Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="bill-input-group">
+                        <label for="billYear">Ano</label>
+                        <input type="number" id="billYear" placeholder="Ex: 2025" 
+                               min="2020" max="2030" value="${appState.contaLuz.ano || ''}">
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    const chartOptionsHTML = config.types.map(chartType => `
+        <label class="chart-checkbox-item">
+            <input type="checkbox" name="chartTypes" value="${chartType.id}" data-label="${chartType.label}">
+            <div class="checkbox-content">
+                <i class="fas ${chartType.icon}"></i>
+                <span>${chartType.label}</span>
+            </div>
+        </label>
+    `).join('');
+
+    optionsContainer.innerHTML = `
+        <div class="chart-options-header">
+            <h4>Selecione os tipos de gráficos para: ${config.name}</h4>
+        </div>
+        ${billValueHTML}
+        <div class="chart-selection-grid">
+            ${chartOptionsHTML}
+        </div>
+        <div class="chart-options-actions">
+            <button class="btn-secondary" onclick="hideChartOptions()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
             <button class="btn-primary" onclick="generateCharts('${type}')">
                 <i class="fas fa-chart-line"></i> Gerar Gráficos
             </button>
         </div>
     `;
 
-    // Inserir depois da grid de botões
     const reportsGrid = document.querySelector('.reports-grid');
     reportsGrid.insertAdjacentElement('afterend', optionsContainer);
 
-    // Animar entrada
     setTimeout(() => {
         optionsContainer.classList.add('active');
     }, 10);
@@ -333,7 +604,6 @@ function hideChartOptions() {
 function hideGeneratedCharts() {
     const chartsContainer = document.getElementById('generatedChartsContainer');
     if (chartsContainer) {
-        // Destruir instâncias dos gráficos
         Object.values(chartInstances).forEach(chart => {
             if (chart) chart.destroy();
         });
@@ -346,6 +616,8 @@ function hideGeneratedCharts() {
     }
 }
 
+let currentChartsConfig = null;
+
 function generateCharts(reportType) {
     const selectedInputs = document.querySelectorAll('input[name="chartTypes"]:checked');
 
@@ -355,15 +627,48 @@ function generateCharts(reportType) {
     }
 
     const config = chartTypesConfig[reportType];
+
+    // Validar e salvar valor da conta se necessário
+    if (config.needsBillValue) {
+        const billValue = document.getElementById('billValue');
+        const billMonth = document.getElementById('billMonth');
+        const billYear = document.getElementById('billYear');
+
+        if (!billValue.value || !billMonth.value || !billYear.value) {
+            showNotification('Preencha todos os campos da conta de luz!', 'error');
+            return;
+        }
+
+        appState.contaLuz.valor = parseFloat(billValue.value);
+        appState.contaLuz.mes = billMonth.value;
+        appState.contaLuz.ano = billYear.value;
+
+        showNotification('Dados da conta salvos com sucesso!', 'success', 2000);
+    }
+
     const selectedCharts = Array.from(selectedInputs).map(input => ({
         type: input.value,
         label: input.getAttribute('data-label')
     }));
 
+    currentChartsConfig = {
+        reportType,
+        selectedCharts,
+        config
+    };
+
     hideChartOptions();
     hideGeneratedCharts();
+    drilldownStack = [];
 
-    // Criar container de gráficos
+    _renderCharts();
+}
+
+function _renderCharts() {
+    if (!currentChartsConfig) return;
+
+    const { reportType, selectedCharts, config } = currentChartsConfig;
+
     const chartsContainer = document.createElement('div');
     chartsContainer.id = 'generatedChartsContainer';
     chartsContainer.className = 'generated-charts-container';
@@ -371,7 +676,7 @@ function generateCharts(reportType) {
     let chartsHTML = `
         <div class="generated-charts-header">
             <h3><i class="fas fa-chart-bar"></i> ${config.name}</h3>
-            <button class="close-charts-btn" onclick="hideGeneratedCharts()">
+            <button class="close-charts-btn" onclick="closeCharts()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -400,15 +705,12 @@ function generateCharts(reportType) {
     chartsHTML += `</div>`;
     chartsContainer.innerHTML = chartsHTML;
 
-    // Inserir no DOM
     const reportsGrid = document.querySelector('.reports-grid');
     reportsGrid.insertAdjacentElement('afterend', chartsContainer);
 
-    // Animar entrada
     setTimeout(() => {
         chartsContainer.classList.add('active');
 
-        // Criar os gráficos
         selectedCharts.forEach((chart, index) => {
             const chartId = `generatedChart_${reportType}_${chart.type}_${index}`;
             createChart(chartId, reportType, chart.type);
@@ -418,52 +720,377 @@ function generateCharts(reportType) {
     showNotification(`${selectedCharts.length} gráfico(s) gerado(s) com sucesso!`, 'success');
 }
 
+function closeCharts() {
+    hideGeneratedCharts();
+    currentChartsConfig = null;
+    drilldownStack = [];
+}
+
 function createChart(canvasId, reportType, chartType) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-
-    // Dados de exemplo baseados no tipo de relatório
     let chartData = getChartData(reportType, chartType);
 
     const chartInstance = new Chart(ctx, chartData);
     chartInstances[canvasId] = chartInstance;
+
+    canvas.style.cursor = 'pointer';
+
+    const clickHandler = (e) => {
+        const canvasPosition = Chart.helpers.getRelativePosition(e, chartInstance);
+        const dataX = chartInstance.scales.x.getValueForPixel(canvasPosition.x);
+        const dataIndex = Math.round(dataX);
+
+        if (reportType === 'consumo-setor') {
+            if (dataIndex >= 0 && dataIndex < appState.setores.length) {
+                const setorId = appState.setores[dataIndex]?.id;
+                if (setorId) {
+                    showDrilldownDispositivos(setorId);
+                }
+            }
+        }
+        else if (reportType === 'custos') {
+            if (dataIndex >= 0 && dataIndex < appState.dispositivos.length) {
+                const dispositivo = appState.dispositivos[dataIndex];
+                if (dispositivo) {
+                    showDrilldownCustosDetalhes(dispositivo);
+                }
+            }
+        }
+        else if (reportType === 'economia') {
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            if (dataIndex >= 0 && dataIndex < meses.length) {
+                showDrilldownEconomiaDetalhes(dataIndex, meses[dataIndex]);
+            }
+        }
+        else if (reportType === 'evolucao') {
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            if (dataIndex >= 0 && dataIndex < meses.length) {
+                showDrilldownEvolucaoDetalhes(dataIndex, meses[dataIndex]);
+            }
+        }
+    };
+
+    canvas.addEventListener('click', clickHandler);
+}
+
+function showDrilldownDispositivos(setorId) {
+    const setor = appState.setores.find(s => s.id === setorId);
+    if (!setor) return;
+
+    drilldownStack.push(setorId);
+
+    const dispositivos = getDispositivosBySetor(setorId);
+    if (dispositivos.length === 0) {
+        showNotification(`Nenhum dispositivo encontrado no setor ${setor.nome}`, 'warning');
+        drilldownStack.pop();
+        return;
+    }
+
+    const chartsContainer = document.getElementById('generatedChartsContainer');
+    if (!chartsContainer) return;
+
+    let drilldownHTML = `
+        <div class="drilldown-container" id="drilldown_${setorId}">
+            <div class="drilldown-header">
+                <button class="btn-back" onclick="goBackDrilldown()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <h3>Dispositivos - ${setor.nome}</h3>
+            </div>
+            <div class="generated-chart-card">
+                <div class="chart-card-header">
+                    <h4>Consumo por Dispositivo</h4>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="drilldownChart_${setorId}"></canvas>
+                </div>
+            </div>
+        </div>
+    `;
+
+    chartsContainer.insertAdjacentHTML('beforeend', drilldownHTML);
+
+    setTimeout(() => {
+        const drilldownCanvas = document.getElementById(`drilldownChart_${setorId}`);
+        if (drilldownCanvas) {
+            const ctx = drilldownCanvas.getContext('2d');
+
+            const drilldownChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dispositivos.map(d => d.nome),
+                    datasets: [{
+                        label: 'Consumo (kWh)',
+                        data: dispositivos.map(d => d.consumo),
+                        backgroundColor: chartColors,
+                        borderRadius: 8
+                    }]
+                },
+                options: getChartOptions('bar')
+            });
+
+            chartInstances[`drilldownChart_${setorId}`] = drilldownChart;
+            showNotification(`Clique em um dispositivo para mais detalhes`, 'info', 2000);
+        }
+    }, 100);
+}
+
+// NOVA FUNÇÃO: Drilldown para custos por dispositivo
+function showDrilldownCustosDetalhes(dispositivo) {
+    const sala = appState.salas.find(s => s.id == dispositivo.sala);
+    const setor = sala ? appState.setores.find(st => st.id == sala.setor) : null;
+
+    drilldownStack.push(`custo_${dispositivo.id}`);
+
+    const chartsContainer = document.getElementById('generatedChartsContainer');
+    if (!chartsContainer) return;
+
+    const totalConsumo = appState.dispositivos.reduce((sum, d) => sum + d.consumo, 0);
+    const consumoPercentual = ((dispositivo.consumo / totalConsumo) * 100).toFixed(2);
+
+    // Calcular custo se tiver valor da conta
+    let custoEstimado = 'N/A';
+    if (appState.contaLuz.valor > 0) {
+        const custoPorKwh = appState.contaLuz.valor / totalConsumo;
+        custoEstimado = `R$ ${(custoPorKwh * dispositivo.consumo).toFixed(2)}`;
+    }
+
+    let drilldownHTML = `
+        <div class="drilldown-container" id="drilldown_custo_${dispositivo.id}">
+            <div class="drilldown-header">
+                <button class="btn-back" onclick="goBackDrilldown()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <h3>Análise de Custo - ${dispositivo.nome}</h3>
+            </div>
+            <div class="generated-chart-card">
+                <div class="chart-card-header">
+                    <h4>Informações Detalhadas</h4>
+                </div>
+                <div class="chart-card-footer" style="display: flex; flex-direction: column; gap: 15px; border: none; padding: 20px;">
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Tipo:</span>
+                        <span style="color: #f7f7f7;">${dispositivo.tipo}</span>
+                    </div>
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Sala:</span>
+                        <span style="color: #f7f7f7;">${sala ? sala.nome : 'N/A'}</span>
+                    </div>
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Setor:</span>
+                        <span style="color: #f7f7f7;">${setor ? setor.nome : 'N/A'}</span>
+                    </div>
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Consumo:</span>
+                        <span style="color: #10b981; font-weight: 600;">${dispositivo.consumo} kWh</span>
+                    </div>
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">% do Total:</span>
+                        <span style="color: #10b981; font-weight: 600;">${consumoPercentual}%</span>
+                    </div>
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Custo Estimado:</span>
+                        <span style="color: #10b981; font-weight: 600;">${custoEstimado}</span>
+                    </div>
+                    ${appState.contaLuz.mes && appState.contaLuz.ano ? `
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Referência:</span>
+                        <span style="color: #f7f7f7;">${appState.contaLuz.mes}/${appState.contaLuz.ano}</span>
+                    </div>
+                    ` : ''}
+                    <div class="info-group" style="display: flex; justify-content: space-between; padding: 10px 0; margin-top: 10px; border-top: 1px solid rgba(255,183,3,0.2); padding-top: 15px;">
+                        <span style="color: #f7f7f7;">Descrição:</span>
+                    </div>
+                    <span style="color: #f7f7f7; font-size: 0.95rem;">${dispositivo.descricao || 'Sem descrição'}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    chartsContainer.insertAdjacentHTML('beforeend', drilldownHTML);
+    showNotification(`Análise de custo: ${dispositivo.nome}`, 'info', 2000);
+}
+
+function showDrilldownEconomiaDetalhes(mesIndex, mesNome) {
+    drilldownStack.push(`econ_${mesIndex}`);
+
+    const chartsContainer = document.getElementById('generatedChartsContainer');
+    if (!chartsContainer) return;
+
+    const economiaData = [10, 12, 15, 18, 20, 22, 25, 28, 30, 32, 35, 38];
+    const economiaAtingida = economiaData[mesIndex];
+    const setores = appState.setores.map(s => ({
+        nome: s.nome,
+        economia: (economiaAtingida * Math.random()).toFixed(1)
+    }));
+
+    let drilldownHTML = `
+        <div class="drilldown-container" id="drilldown_econ_${mesIndex}">
+            <div class="drilldown-header">
+                <button class="btn-back" onclick="goBackDrilldown()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <h3>Economia em ${mesNome}</h3>
+            </div>
+            <div class="generated-chart-card">
+                <div class="chart-card-header">
+                    <h4>Economia por Setor - ${mesNome}</h4>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="drilldownChart_econ_${mesIndex}"></canvas>
+                </div>
+            </div>
+        </div>
+    `;
+
+    chartsContainer.insertAdjacentHTML('beforeend', drilldownHTML);
+
+    setTimeout(() => {
+        const drilldownCanvas = document.getElementById(`drilldownChart_econ_${mesIndex}`);
+        if (drilldownCanvas) {
+            const ctx = drilldownCanvas.getContext('2d');
+
+            const drilldownChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: setores.map(s => s.nome),
+                    datasets: [{
+                        label: 'Economia (%)',
+                        data: setores.map(s => parseFloat(s.economia)),
+                        backgroundColor: chartColors,
+                        borderRadius: 8
+                    }]
+                },
+                options: getChartOptions('bar')
+            });
+
+            chartInstances[`drilldownChart_econ_${mesIndex}`] = drilldownChart;
+            showNotification(`Economia em ${mesNome}`, 'info', 2000);
+        }
+    }, 100);
+}
+
+function showDrilldownEvolucaoDetalhes(mesIndex, mesNome) {
+    drilldownStack.push(`evol_${mesIndex}`);
+
+    const chartsContainer = document.getElementById('generatedChartsContainer');
+    if (!chartsContainer) return;
+
+    const dados2024 = [8500, 7800, 8200, 7500, 8000, 9200, 9800, 10200, 9500, 8800, 8300, 7900];
+    const dados2025 = [7800, 7200, 7600, 6900, 7300, 8400, 8800, 9100, 8600, 7900, 7500, 7100];
+
+    let drilldownHTML = `
+        <div class="drilldown-container" id="drilldown_evol_${mesIndex}">
+            <div class="drilldown-header">
+                <button class="btn-back" onclick="goBackDrilldown()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <h3>Evolução em ${mesNome}</h3>
+            </div>
+            <div class="generated-chart-card">
+                <div class="chart-card-header">
+                    <h4>Comparativo ${mesNome} - 2024 vs 2025</h4>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="drilldownChart_evol_${mesIndex}"></canvas>
+                </div>
+            </div>
+            <div class="generated-chart-card" style="margin-top: 20px;">
+                <div class="chart-card-header">
+                    <h4>Detalhes</h4>
+                </div>
+                <div class="chart-card-footer" style="display: flex; flex-direction: column; gap: 15px; border: none; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Consumo 2024:</span>
+                        <span style="color: #f7f7f7;">${dados2024[mesIndex]} kWh</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Consumo 2025:</span>
+                        <span style="color: #f7f7f7;">${dados2025[mesIndex]} kWh</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,183,3,0.2);">
+                        <span style="color: #ffb703; font-weight: 600;">Redução:</span>
+                        <span style="color: #10b981; font-weight: 600;">${dados2024[mesIndex] - dados2025[mesIndex]} kWh</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                        <span style="color: #ffb703; font-weight: 600;">Percentual:</span>
+                        <span style="color: #10b981; font-weight: 600;">${(((dados2024[mesIndex] - dados2025[mesIndex]) / dados2024[mesIndex]) * 100).toFixed(2)}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    chartsContainer.insertAdjacentHTML('beforeend', drilldownHTML);
+
+    setTimeout(() => {
+        const drilldownCanvas = document.getElementById(`drilldownChart_evol_${mesIndex}`);
+        if (drilldownCanvas) {
+            const ctx = drilldownCanvas.getContext('2d');
+
+            const drilldownChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [mesNome],
+                    datasets: [{
+                        label: '2024',
+                        data: [dados2024[mesIndex]],
+                        backgroundColor: themeColors.primary,
+                        borderRadius: 8
+                    }, {
+                        label: '2025',
+                        data: [dados2025[mesIndex]],
+                        backgroundColor: themeColors.success,
+                        borderRadius: 8
+                    }]
+                },
+                options: getChartOptions('bar')
+            });
+
+            chartInstances[`drilldownChart_evol_${mesIndex}`] = drilldownChart;
+            showNotification(`Evolução em ${mesNome}`, 'info', 2000);
+        }
+    }, 100);
+}
+
+function goBackDrilldown() {
+    if (drilldownStack.length > 0) {
+        const last = drilldownStack.pop();
+        let elementId = last;
+
+        if (typeof last === 'number') {
+            elementId = `drilldown_${last}`;
+        } else if (typeof last === 'string') {
+            elementId = `drilldown_${last}`;
+        }
+
+        const drilldownContainer = document.getElementById(elementId);
+        if (drilldownContainer) {
+            drilldownContainer.remove();
+        }
+    }
 }
 
 function getChartData(reportType, chartType) {
-    const themeColors = {
-        primary: '#ffb703',
-        primaryBg: '#ffd966',
-        secondary: '#001824',
-        success: '#10b981',
-        info: '#3b82f6'
-    };
-
-    const chartColors = [
-        themeColors.primary,
-        themeColors.primaryBg,
-        themeColors.secondary,
-        themeColors.success,
-        themeColors.info,
-        '#e6a400',
-        '#ff8500',
-        '#0077be'
-    ];
-
     let config = {};
 
-    // Dados baseados no tipo de relatório
     switch (reportType) {
-        case 'consumo-setor':
+        case 'consumo-setor': {
+            const consumoMap = getConsumoBySetor();
+            const labels = appState.setores.map(s => s.nome);
+            const data = appState.setores.map(s => consumoMap[s.id] || 0);
+
             if (chartType === 'bar') {
                 config = {
                     type: 'bar',
                     data: {
-                        labels: ['Administrativo', 'Produção', 'TI', 'Vendas', 'RH', 'Financeiro'],
+                        labels,
                         datasets: [{
                             label: 'Consumo (kWh)',
-                            data: [1250, 3800, 950, 750, 400, 650],
+                            data,
                             backgroundColor: chartColors,
                             borderRadius: 8
                         }]
@@ -474,10 +1101,10 @@ function getChartData(reportType, chartType) {
                 config = {
                     type: 'line',
                     data: {
-                        labels: ['Administrativo', 'Produção', 'TI', 'Vendas', 'RH', 'Financeiro'],
+                        labels,
                         datasets: [{
                             label: 'Consumo (kWh)',
-                            data: [1250, 3800, 950, 750, 400, 650],
+                            data,
                             borderColor: themeColors.primary,
                             backgroundColor: 'rgba(255, 183, 3, 0.1)',
                             tension: 0.4,
@@ -487,18 +1114,19 @@ function getChartData(reportType, chartType) {
                     options: getChartOptions('line')
                 };
             } else if (chartType === 'mixed') {
+                const media = (data.reduce((a, b) => a + b, 0) / data.length).toFixed(0);
                 config = {
                     type: 'bar',
                     data: {
-                        labels: ['Administrativo', 'Produção', 'TI', 'Vendas', 'RH', 'Financeiro'],
+                        labels,
                         datasets: [{
                             label: 'Consumo (kWh)',
-                            data: [1250, 3800, 950, 750, 400, 650],
+                            data,
                             backgroundColor: 'rgba(255, 183, 3, 0.5)',
                             type: 'bar'
                         }, {
                             label: 'Média',
-                            data: [1300, 3700, 1000, 800, 450, 700],
+                            data: Array(data.length).fill(media),
                             borderColor: themeColors.success,
                             type: 'line',
                             tension: 0.4
@@ -508,6 +1136,7 @@ function getChartData(reportType, chartType) {
                 };
             }
             break;
+        }
 
         case 'economia':
             if (chartType === 'line') {
@@ -559,14 +1188,15 @@ function getChartData(reportType, chartType) {
             }
             break;
 
-        case 'custos':
+        case 'custos': {
+            const dispositivosData = getConsumoByDispositivo();
             if (chartType === 'doughnut') {
                 config = {
                     type: 'doughnut',
                     data: {
-                        labels: ['Ar Condicionado', 'Computadores', 'Iluminação', 'Servidores', 'Impressoras', 'Outros'],
+                        labels: dispositivosData.map(d => d.nome),
                         datasets: [{
-                            data: [40, 25, 15, 12, 5, 3],
+                            data: dispositivosData.map(d => parseFloat(d.percentual)),
                             backgroundColor: chartColors,
                             borderWidth: 2,
                             borderColor: '#fff'
@@ -578,10 +1208,10 @@ function getChartData(reportType, chartType) {
                 config = {
                     type: 'bar',
                     data: {
-                        labels: ['Ar Condicionado', 'Computadores', 'Iluminação', 'Servidores', 'Impressoras', 'Outros'],
+                        labels: dispositivosData.map(d => d.nome),
                         datasets: [{
-                            label: 'Custo (%)',
-                            data: [40, 25, 15, 12, 5, 3],
+                            label: 'Consumo (%)',
+                            data: dispositivosData.map(d => parseFloat(d.percentual)),
                             backgroundColor: chartColors,
                             borderRadius: 8
                         }]
@@ -592,28 +1222,17 @@ function getChartData(reportType, chartType) {
                 config = {
                     type: 'bubble',
                     data: {
-                        datasets: [{
-                            label: 'Ar Condicionado',
-                            data: [{ x: 40, y: 25, r: 15 }],
-                            backgroundColor: chartColors[0]
-                        }, {
-                            label: 'Computadores',
-                            data: [{ x: 25, y: 20, r: 12 }],
-                            backgroundColor: chartColors[1]
-                        }, {
-                            label: 'Iluminação',
-                            data: [{ x: 15, y: 15, r: 10 }],
-                            backgroundColor: chartColors[2]
-                        }, {
-                            label: 'Servidores',
-                            data: [{ x: 12, y: 30, r: 8 }],
-                            backgroundColor: chartColors[3]
-                        }]
+                        datasets: dispositivosData.slice(0, 4).map((d, i) => ({
+                            label: d.nome,
+                            data: [{ x: parseFloat(d.percentual), y: d.consumo, r: d.consumo / 100 }],
+                            backgroundColor: chartColors[i]
+                        }))
                     },
                     options: getChartOptions('bubble')
                 };
             }
             break;
+        }
 
         case 'evolucao':
             if (chartType === 'line') {
@@ -667,7 +1286,7 @@ function getChartData(reportType, chartType) {
                             type: 'bar'
                         }, {
                             label: 'Tendência',
-                            data: [8500, 8200, 8000, 7800, 7600, 7400, 7200, 7000, 6800, 6600, 6400, 6200],
+                            data: [8300, 8100, 7900, 7700, 7500, 7300, 7100, 6900, 6700, 6500, 6300, 6100],
                             borderColor: themeColors.success,
                             type: 'line',
                             tension: 0.4
@@ -694,9 +1313,7 @@ function getChartOptions(type) {
                 labels: {
                     usePointStyle: true,
                     padding: 15,
-                    font: {
-                        size: 11
-                    }
+                    font: { size: 11 }
                 }
             },
             tooltip: {
@@ -714,20 +1331,22 @@ function getChartOptions(type) {
         baseOptions.scales = {
             y: {
                 beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 24, 36, 0.1)'
-                }
+                grid: { color: 'rgba(0, 24, 36, 0.1)' }
             },
             x: {
-                grid: {
-                    display: false
-                }
+                grid: { display: false }
             }
         };
     }
 
     return baseOptions;
 }
+
+window.addEventListener('beforeunload', () => {
+    Object.values(chartInstances).forEach(chart => {
+        if (chart) chart.destroy();
+    });
+});
 
 function downloadChart(chartId, fileName) {
     const chart = chartInstances[chartId];
@@ -745,7 +1364,6 @@ function downloadChart(chartId, fileName) {
     showNotification('Gráfico baixado com sucesso!', 'success');
 }
 
-// Modal Functions
 function openModal(title, content) {
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalBody').innerHTML = content;
@@ -768,7 +1386,6 @@ if (editModal) {
     });
 }
 
-// Render Functions
 function renderSetoresList() {
     const container = document.getElementById('setoresList');
     const countEl = document.getElementById('setoresCount');
@@ -804,10 +1421,6 @@ function renderSetoresList() {
                 </div>
             </div>
             <div class="list-item-info">
-                <div class="info-group">
-                    <span class="info-label">Responsável</span>
-                    <span class="info-value">${setor.responsavel}</span>
-                </div>
                 <div class="info-group">
                     <span class="info-label">Descrição</span>
                     <span class="info-value">${setor.descricao || 'Não informada'}</span>
@@ -933,20 +1546,15 @@ function renderAllLists() {
     renderDispositivosList();
 }
 
-// Edit Functions
 function editSetor(id) {
     const setor = appState.setores.find(s => s.id === id);
     if (!setor) return;
 
     const formHTML = `
-        <form id="editSetorForm" class="form-group">
+        <form id="editSetorForm">
             <div class="form-group">
                 <label>Nome do Setor *</label>
                 <input type="text" id="editSetorNome" class="form-input" value="${setor.nome}" required>
-            </div>
-            <div class="form-group">
-                <label>Responsável *</label>
-                <input type="text" id="editSetorResponsavel" class="form-input" value="${setor.responsavel}" required>
             </div>
             <div class="form-group">
                 <label>Descrição</label>
@@ -962,7 +1570,6 @@ function editSetor(id) {
         e.preventDefault();
 
         setor.nome = document.getElementById('editSetorNome').value.trim();
-        setor.responsavel = document.getElementById('editSetorResponsavel').value.trim();
         setor.descricao = document.getElementById('editSetorDescricao').value.trim();
 
         renderAllLists();
@@ -1081,7 +1688,6 @@ function editDispositivo(id) {
     });
 }
 
-// Delete Functions
 function deleteSetor(id) {
     if (!confirm('Tem certeza que deseja excluir este setor?')) return;
 
@@ -1132,7 +1738,6 @@ function deleteDispositivo(id) {
     }
 }
 
-// Utility Functions
 let notificationTimeout = null;
 
 function showNotification(message, type = 'success', duration = 3000) {
@@ -1247,7 +1852,6 @@ function updateSelectOptions() {
     }
 }
 
-// Form Submission Handlers
 const setorForm = document.getElementById('setorForm');
 if (setorForm) {
     setorForm.addEventListener('submit', (e) => {
@@ -1261,7 +1865,6 @@ if (setorForm) {
         const formData = {
             id: appState.setores.length > 0 ? Math.max(...appState.setores.map(s => s.id)) + 1 : 1,
             nome: document.getElementById('setorNome').value.trim(),
-            responsavel: document.getElementById('setorResponsavel').value.trim(),
             descricao: document.getElementById('setorDescricao').value.trim()
         };
 
@@ -1269,6 +1872,11 @@ if (setorForm) {
         updateStats();
         updateSelectOptions();
         renderAllLists();
+
+        if (currentChartsConfig) {
+            hideGeneratedCharts();
+            _renderCharts();
+        }
 
         showNotification(`Setor "${formData.nome}" cadastrado com sucesso!`, 'success');
         setorForm.reset();
@@ -1296,6 +1904,11 @@ if (salaForm) {
         updateStats();
         updateSelectOptions();
         renderAllLists();
+
+        if (currentChartsConfig) {
+            hideGeneratedCharts();
+            _renderCharts();
+        }
 
         showNotification(`Sala "${formData.nome}" cadastrada com sucesso!`, 'success');
         salaForm.reset();
@@ -1325,12 +1938,16 @@ if (dispositivoForm) {
         updateStats();
         renderAllLists();
 
+        if (currentChartsConfig) {
+            hideGeneratedCharts();
+            _renderCharts();
+        }
+
         showNotification(`Dispositivo "${formData.nome}" cadastrado com sucesso!`, 'success');
         dispositivoForm.reset();
     });
 }
 
-// Form validation on input
 const forms = document.querySelectorAll('form');
 forms.forEach(form => {
     const inputs = form.querySelectorAll('input, select, textarea');
@@ -1344,21 +1961,196 @@ forms.forEach(form => {
     });
 });
 
-// Responsive handling
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
         mobileOverlay.classList.remove('active');
     }
 });
 
-// Auto-collapse sidebar on mobile
 if (window.innerWidth <= 768) {
     sidebar.classList.remove('expanded');
 }
 
-// Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     updateStats();
     updateSelectOptions();
     renderAllLists();
 });
+
+function generateReportOptions(type) {
+    const config = chartTypesConfig[type];
+    if (!config) {
+        showNotification('Tipo de relatório não encontrado!', 'error');
+        return;
+    }
+
+    hideChartOptions();
+    hideGeneratedCharts();
+    drilldownStack = [];
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.id = 'chartOptionsContainer';
+    optionsContainer.className = 'chart-options-container';
+
+    // Campo de valor da conta (apenas se necessário)
+    let billValueHTML = '';
+    if (config.needsBillValue) {
+        billValueHTML = `
+            <div class="bill-value-inputs">
+                <div class="bill-value-header">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h5>Informações da Conta de Luz</h5>
+                </div>
+                <div class="bill-inputs-grid">
+                    <div class="bill-input-group">
+                        <label for="billValue">Valor da Conta (R$) *</label>
+                        <input type="number" id="billValue" placeholder="Ex: 1500.00" 
+                               step="0.01" min="0" value="${appState.contaLuz.valor || ''}" required>
+                        <div class="error-message" id="billValue-error"></div>
+                    </div>
+                    <div class="bill-input-group">
+                        <label for="billMonth">Mês *</label>
+                        <select id="billMonth" required>
+                            <option value="">Selecione o mês</option>
+                            <option value="01" ${appState.contaLuz.mes === '01' ? 'selected' : ''}>Janeiro</option>
+                            <option value="02" ${appState.contaLuz.mes === '02' ? 'selected' : ''}>Fevereiro</option>
+                            <option value="03" ${appState.contaLuz.mes === '03' ? 'selected' : ''}>Março</option>
+                            <option value="04" ${appState.contaLuz.mes === '04' ? 'selected' : ''}>Abril</option>
+                            <option value="05" ${appState.contaLuz.mes === '05' ? 'selected' : ''}>Maio</option>
+                            <option value="06" ${appState.contaLuz.mes === '06' ? 'selected' : ''}>Junho</option>
+                            <option value="07" ${appState.contaLuz.mes === '07' ? 'selected' : ''}>Julho</option>
+                            <option value="08" ${appState.contaLuz.mes === '08' ? 'selected' : ''}>Agosto</option>
+                            <option value="09" ${appState.contaLuz.mes === '09' ? 'selected' : ''}>Setembro</option>
+                            <option value="10" ${appState.contaLuz.mes === '10' ? 'selected' : ''}>Outubro</option>
+                            <option value="11" ${appState.contaLuz.mes === '11' ? 'selected' : ''}>Novembro</option>
+                            <option value="12" ${appState.contaLuz.mes === '12' ? 'selected' : ''}>Dezembro</option>
+                        </select>
+                        <div class="error-message" id="billMonth-error"></div>
+                    </div>
+                    <div class="bill-input-group">
+                        <label for="billYear">Ano *</label>
+                        <input type="number" id="billYear" placeholder="Ex: 2025" 
+                               min="2020" max="2030" value="${appState.contaLuz.ano || ''}" required>
+                        <div class="error-message" id="billYear-error"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    const chartOptionsHTML = config.types.map(chartType => `
+        <label class="chart-checkbox-item">
+            <input type="checkbox" name="chartTypes" value="${chartType.id}" data-label="${chartType.label}">
+            <div class="checkbox-content">
+                <i class="fas ${chartType.icon}"></i>
+                <span>${chartType.label}</span>
+            </div>
+        </label>
+    `).join('');
+
+    optionsContainer.innerHTML = `
+        <div class="chart-options-header">
+            <h4>Selecione os tipos de gráficos para: ${config.name}</h4>
+        </div>
+        ${billValueHTML}
+        <div class="chart-selection-grid">
+            ${chartOptionsHTML}
+        </div>
+        <div class="chart-options-actions">
+            <button class="btn-secondary" onclick="hideChartOptions()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button class="btn-primary" onclick="validateBillData('${type}')">
+                <i class="fas fa-chart-line"></i> Gerar Gráficos
+            </button>
+        </div>
+    `;
+
+    const reportsGrid = document.querySelector('.reports-grid');
+    reportsGrid.insertAdjacentElement('afterend', optionsContainer);
+
+    // Adicionar validação em tempo real para os campos da conta
+    if (config.needsBillValue) {
+        const billInputs = optionsContainer.querySelectorAll('#billValue, #billMonth, #billYear');
+        billInputs.forEach(input => {
+            input.addEventListener('blur', function () {
+                const errorElement = document.getElementById(`${this.id}-error`);
+                validateField(this, errorElement);
+            });
+        });
+    }
+
+    setTimeout(() => {
+        optionsContainer.classList.add('active');
+    }, 10);
+}
+
+// Nova função para validar dados da conta antes de gerar gráficos
+function validateBillData(reportType) {
+    const config = chartTypesConfig[reportType];
+    let isValid = true;
+
+    if (config.needsBillValue) {
+        const billValue = document.getElementById('billValue');
+        const billMonth = document.getElementById('billMonth');
+        const billYear = document.getElementById('billYear');
+
+        const billValueError = document.getElementById('billValue-error');
+        const billMonthError = document.getElementById('billMonth-error');
+        const billYearError = document.getElementById('billYear-error');
+
+        // Validar cada campo
+        if (!validateField(billValue, billValueError)) isValid = false;
+        if (!validateField(billMonth, billMonthError)) isValid = false;
+        if (!validateField(billYear, billYearError)) isValid = false;
+
+        if (!isValid) {
+            showNotification('Por favor, corrija os erros nos campos da conta de luz!', 'error');
+            return;
+        }
+    }
+
+    // Se tudo estiver válido, prosseguir com a geração dos gráficos
+    generateCharts(reportType);
+}
+
+function generateCharts(reportType) {
+    const selectedInputs = document.querySelectorAll('input[name="chartTypes"]:checked');
+
+    if (selectedInputs.length === 0) {
+        showNotification('Selecione pelo menos um tipo de gráfico!', 'warning');
+        return;
+    }
+
+    const config = chartTypesConfig[reportType];
+
+    // Salvar valor da conta se necessário (já foi validado na função anterior)
+    if (config.needsBillValue) {
+        const billValue = document.getElementById('billValue');
+        const billMonth = document.getElementById('billMonth');
+        const billYear = document.getElementById('billYear');
+
+        appState.contaLuz.valor = parseFloat(billValue.value);
+        appState.contaLuz.mes = billMonth.value;
+        appState.contaLuz.ano = billYear.value;
+
+        showNotification('Dados da conta salvos com sucesso!', 'success', 2000);
+    }
+
+    const selectedCharts = Array.from(selectedInputs).map(input => ({
+        type: input.value,
+        label: input.getAttribute('data-label')
+    }));
+
+    currentChartsConfig = {
+        reportType,
+        selectedCharts,
+        config
+    };
+
+    hideChartOptions();
+    hideGeneratedCharts();
+    drilldownStack = [];
+
+    _renderCharts();
+}

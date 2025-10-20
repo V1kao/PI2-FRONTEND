@@ -1319,4 +1319,162 @@ body {
     .report-actions .btn-primary {
         width: 100%;
     }
+
+    /* ========== ESTILOS PARA CAMPOS DE VALOR DA CONTA DE LUZ ========== */
+    .bill-value-inputs {
+        background: rgba(255, 183, 3, 0.05);
+        border: 2px solid rgba(255, 183, 3, 0.3);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+    }
+
+    .bill-value-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(255, 183, 3, 0.2);
+    }
+
+    .bill-value-header i {
+        font-size: 1.5rem;
+        color: var(--color-primary);
+    }
+
+    .bill-value-header h5 {
+        color: var(--color-primary);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .bill-inputs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .bill-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .bill-input-group label {
+        color: var(--color-text);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .bill-input-group input,
+    .bill-input-group select {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(10, 22, 18, 0.8);
+        border: 2px solid rgba(255, 183, 3, 0.3);
+        border-radius: 10px;
+        color: var(--color-text);
+        font-size: 1rem;
+        transition: all var(--transition);
+        font-family: inherit;
+    }
+
+    .bill-input-group input:focus,
+    .bill-input-group select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 15px rgba(255, 183, 3, 0.3);
+    }
+
+    .bill-input-group input::placeholder {
+        color: rgba(247, 247, 247, 0.5);
+    }
+
+    .bill-input-group select {
+        cursor: pointer;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ffb703" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        appearance: none;
+    }
+
+    .bill-input-group select option {
+        background: var(--color-sidebar);
+        color: var(--color-text);
+    }
+
+    /* Indicador visual quando campos estão preenchidos */
+    .bill-input-group input:valid,
+    .bill-input-group select:valid {
+        border-color: var(--color-success);
+    }
+
+    /* Animação de foco */
+    .bill-input-group input:focus,
+    .bill-input-group select:focus {
+        animation: pulse-border 1.5s infinite;
+    }
+
+    @keyframes pulse-border {
+
+        0%,
+        100% {
+            box-shadow: 0 0 5px rgba(255, 183, 3, 0.3);
+        }
+
+        50% {
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+        }
+    }
+
+    /* Responsividade para os campos de conta */
+    @media (max-width: 768px) {
+        .bill-inputs-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .bill-value-inputs {
+            padding: 20px 15px;
+        }
+
+        .bill-value-header h5 {
+            font-size: 1rem;
+        }
+
+        .bill-input-group input,
+        .bill-input-group select {
+            padding: 10px 12px;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .bill-value-inputs {
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .bill-value-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .bill-value-header i {
+            font-size: 1.3rem;
+        }
+
+        .bill-value-header h5 {
+            font-size: 0.95rem;
+        }
+
+        .bill-inputs-grid {
+            gap: 12px;
+        }
+    }
+
 }
