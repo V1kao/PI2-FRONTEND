@@ -1,0 +1,487 @@
+/* ========== ESTILOS PARA OPÇÕES DE GRÁFICOS ========== */
+.chart-options-container {
+    margin-top: 30px;
+    background: var(--color-card-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(247, 247, 247, 0.1);
+    border-radius: 20px;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.chart-options-container.active {
+    max-height: 600px;
+    padding: 30px;
+    opacity: 1;
+}
+
+.chart-options-header {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 183, 3, 0.2);
+}
+
+.chart-options-header h4 {
+    color: var(--color-primary);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.chart-options-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.chart-options-actions .btn-secondary,
+.chart-options-actions .btn-primary {
+    min-width: 150px;
+}
+
+/* ========== ESTILOS PARA GRÁFICOS GERADOS ========== */
+.generated-charts-container {
+    margin-top: 30px;
+    background: var(--color-card-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(247, 247, 247, 0.1);
+    border-radius: 20px;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.generated-charts-container.active {
+    max-height: 90vh;
+    height: 90vh;
+    padding: 40px;
+    opacity: 1;
+    overflow-y: scroll;
+}
+
+/* ========== SCROLLBAR PERSONALIZADA PARA O CONTAINER ========== */
+.generated-charts-container.active::-webkit-scrollbar {
+    width: 10px;
+}
+
+.generated-charts-container.active::-webkit-scrollbar-track {
+    background: rgba(34, 34, 34, 0.8);
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.generated-charts-container.active::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 10px;
+    border: 2px solid rgba(34, 34, 34, 0.8);
+}
+
+.generated-charts-container.active::-webkit-scrollbar-thumb:hover {
+    background-color: #e6a400;
+}
+
+/* Para Firefox */
+.generated-charts-container.active {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) rgba(34, 34, 34, 0.8);
+}
+
+.generated-charts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid rgba(255, 183, 3, 0.2);
+}
+
+.generated-charts-header h3 {
+    color: var(--color-primary);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.generated-charts-header h3 i {
+    font-size: 1.6rem;
+}
+
+.close-charts-btn {
+    background: none;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-family: inherit;
+}
+
+.close-charts-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-secondary);
+    transform: rotate(90deg);
+}
+
+/* Grid de gráficos gerados - MODIFICADO PARA COLUNA ÚNICA */
+.generated-charts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.generated-chart-card {
+    background: rgba(26, 41, 48, 0.6);
+    border: 2px solid rgba(255, 183, 3, 0.3);
+    border-radius: 20px;
+    padding: 25px;
+    transition: all var(--transition);
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+    position: relative;
+    width: 100%;
+}
+
+.generated-chart-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.generated-chart-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.generated-chart-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.chart-card-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 183, 3, 0.2);
+}
+
+.chart-card-header h4 {
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.chart-canvas-wrapper {
+    position: relative;
+    height: 400px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.chart-canvas-wrapper canvas {
+    max-width: 100%;
+    height: 100% !important;
+}
+
+.chart-card-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 183, 3, 0.2);
+    display: flex;
+    justify-content: center;
+}
+
+.btn-download {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--color-primary), #e6a400);
+    border: none;
+    border-radius: 12px;
+    color: var(--color-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: 0 5px 15px rgba(255, 183, 3, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-download:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 183, 3, 0.4);
+}
+
+.btn-download:active {
+    transform: translateY(-1px);
+}
+
+.btn-download i {
+    font-size: 1.1rem;
+}
+
+/* Animação de fadeIn */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== RESPONSIVIDADE ========== */
+@media (max-width: 1200px) {
+    .generated-charts-grid {
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .chart-options-container.active,
+    .generated-charts-container.active {
+        padding: 25px 20px;
+        max-height: 1500px;
+    }
+
+    .chart-options-header h4 {
+        font-size: 1.2rem;
+    }
+
+    .chart-selection-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .chart-options-actions {
+        flex-direction: column;
+    }
+
+    .chart-options-actions .btn-secondary,
+    .chart-options-actions .btn-primary {
+        width: 100%;
+    }
+
+    .generated-charts-header h3 {
+        font-size: 1.4rem;
+    }
+
+    .generated-charts-grid {
+        gap: 20px;
+    }
+
+    .generated-chart-card {
+        padding: 20px 15px;
+    }
+
+    .chart-canvas-wrapper {
+        height: 300px;
+        padding: 15px;
+    }
+
+    .btn-download {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .close-charts-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .generated-charts-container::-webkit-scrollbar {
+        width: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-options-container.active {
+        max-height: 700px;
+    }
+
+    .generated-charts-container.active {
+        max-height: 1200px;
+        padding: 20px 15px;
+    }
+
+    .chart-options-header h4 {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .chart-canvas-wrapper {
+        height: 250px;
+        padding: 10px;
+    }
+
+    .generated-chart-card {
+        padding: 15px;
+    }
+
+    .chart-card-header h4 {
+        font-size: 1rem;
+    }
+
+    .btn-download {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== REMOVIDO O EFEITO DE BRILHO ========== */
+/* COMENTADO: Efeito before que causava o brilho
+.generated-chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 183, 3, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.generated-chart-card:hover::before {
+    left: 100%;
+}
+*/
+
+/* Loading state para gráficos */
+.chart-canvas-wrapper.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-canvas-wrapper.loading::after {
+    content: '\f110';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--color-primary);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* REMOVIDO: Efeito de pulse no botão de download 
+@keyframes pulse {
+    0%,
+    100% {
+        box-shadow: 0 5px 15px rgba(255, 183, 3, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 5px 25px rgba(255, 183, 3, 0.5);
+    }
+}
+
+.btn-download:hover {
+    animation: pulse 2s infinite;
+}
+*/
+
+/* Estado vazio */
+.no-charts-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--color-text);
+    opacity: 0.6;
+}
+
+.no-charts-message i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+    color: var(--color-primary);
+}
+
+.no-charts-message p {
+    font-size: 1.2rem;
+}
+
+/* Drilldown Styles */
+.drilldown-container {
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(26, 41, 48, 0.8);
+    border: 2px solid rgba(255, 183, 3, 0.3);
+    border-radius: 20px;
+    animation: fadeInUp 0.5s ease;
+}
+
+.drilldown-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 183, 3, 0.2);
+}
+
+.btn-back {
+    padding: 10px 20px;
+    background: rgba(255, 183, 3, 0.2);
+    border: 2px solid var(--color-primary);
+    border-radius: 10px;
+    color: var(--color-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-back:hover {
+    background: var(--color-primary);
+    color: var(--color-secondary);
+    transform: translateX(-3px);
+}
+
+.drilldown-header h3 {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .drilldown-container {
+        padding: 20px 15px;
+    }
+    
+    .drilldown-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

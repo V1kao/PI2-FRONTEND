@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: sage_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: sage
+      POSTGRES_USER: sage
+      POSTGRES_PASSWORD: sage
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sage -d sage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: paulohramalho/pibackend
+    container_name: sage_api
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/sage
+      DB_USERNAME: sage
+      DB_PASSWORD: sage
+      JWT_ISSUER: lumen-labs
+      JWT_SECRET: qjcI2iW2KcfNbjnwHLSqTLUBiiRar6EI0s4kGhHL2ScW2Z6WrP
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

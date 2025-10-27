@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAGE - Sistema de Análise e Gerenciamento Energético</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="src/styles/style.css">
+    <link rel="stylesheet" href="src/styles/navbar.css">
+    <link rel="stylesheet" href="src/styles/banner.css">
+    <!DOCTYPE html>
+    <html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SAGE - Sistema de Análise e Gerenciamento Energético</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+            integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Questrial:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="src/styles/style.css">
+        <link rel="stylesheet" href="src/styles/navbar.css">
+        <link rel="stylesheet" href="src/styles/banner.css">
+        <link rel="stylesheet" href="src/styles/stylesOdsButton.css">
+
+        <!-- GSAP and ScrollTrigger -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+
+<body>
+    <!-- Botão ODS 7 Flutuante -->
+    <div id="ods-floating-button" class="ods-floating-btn">
+        <img src="src/images/ODS-7.png" alt="ODS 7" title="Energia Acessível e Limpa">
+        <span class="ods-tooltip">ODS 7 - Energia Limpa</span>
+    </div>
+
+    <header>
+        <div class="logo">SAGE</div>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="navbar" id="navbar">
+            <div class="nav-overlay" id="navOverlay"></div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#sistema">Sistema</a></li>
+                <li><a href="#graficos">Análise Visual</a></li>
+                <li><a href="#impacto">Impacto</a></li>
+                <li><a href="saibaMais.html">Saiba Mais</a></li>
+                <li><a href="cadastro.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div id="banner">
+                <div id="banner-content">
+                    <div class="banner-text">
+                        <h1><span>S</span>istema de <span>A</span>nálise e <span>G</span>erenciamento
+                            <span>E</span>nergético
+                        </h1>
+                        <p>Monitore, analise e otimize o consumo energético da sua empresa com nossa plataforma
+                            inteligente. Reduza custos e promova sustentabilidade através de dados precisos.</p>
+                        <a href="#sistema" class="btn-primary">Conheça nossa solução</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sistema">
+            <div id="solution-text-container">
+                <h2>Nossa Solução</h2>
+                <p>Uma plataforma web completa para análise e gerenciamento do consumo energético empresarial. Nosso
+                    sistema permite o cadastro da estrutura organizacional, registro de contas de luz, monitoramento
+                    detalhado por dispositivo e geração de relatórios estratégicos.</p>
+                <br>
+                <p>Com dashboards interativos e análises de rateio, sua empresa poderá identificar pontos críticos de
+                    consumo, reduzir custos operacionais e implementar estratégias eficazes para maior eficiência
+                    energética e sustentabilidade.</p>
+            </div>
+            <div id="solution-image-container">
+                <img id="solution-image" src="src/images/system-image.png" alt="">
+            </div>
+        </section>
+
+        <!-- Substitua a seção #graficos no seu index.html por este código -->
+
+        <section id="graficos">
+            <div class="charts-wrapper">
+                <div class="section-header">
+                    <h2 class="section-title">Análises Visuais</h2>
+                    <p class="section-description">Visualize dados de consumo energético através de gráficos interativos
+                        e informativos</p>
+                </div>
+
+                <div class="charts-grid">
+                    <!-- 1. CONSUMO MENSAL POR SETOR -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Consumo Mensal por Setor</h3>
+                            <div class="chart-type-controls">
+                                <button class="chart-type-btn active" data-type="bar"
+                                    onclick="changeChartType('consumoSetorChart', 'bar')">
+                                    <i class="fas fa-chart-bar"></i> Barras
+                                </button>
+                                <button class="chart-type-btn" data-type="line"
+                                    onclick="changeChartType('consumoSetorChart', 'line')">
+                                    <i class="fas fa-chart-line"></i> Linhas
+                                </button>
+                                <button class="chart-type-btn" data-type="mixed"
+                                    onclick="changeChartType('consumoSetorChart', 'mixed')">
+                                    <i class="fas fa-chart-area"></i> Misto
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="consumoSetorChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 2. ECONOMIA ALCANÇADA -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Economia Alcançada (%)</h3>
+                            <div class="chart-type-controls">
+                                <button class="chart-type-btn active" data-type="line"
+                                    onclick="changeChartType('economiaChart', 'line')">
+                                    <i class="fas fa-chart-line"></i> Linhas
+                                </button>
+                                <button class="chart-type-btn" data-type="area"
+                                    onclick="changeChartType('economiaChart', 'area')">
+                                    <i class="fas fa-chart-area"></i> Área
+                                </button>
+                                <button class="chart-type-btn" data-type="bar"
+                                    onclick="changeChartType('economiaChart', 'bar')">
+                                    <i class="fas fa-chart-bar"></i> Barras
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="economiaChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 3. DISTRIBUIÇÃO DE CUSTOS POR DISPOSITIVO -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Distribuição de Custos por Dispositivo</h3>
+                            <div class="chart-type-controls">
+                                <button class="chart-type-btn active" data-type="doughnut"
+                                    onclick="changeChartType('doughnutChart', 'doughnut')">
+                                    <i class="fas fa-chart-pie"></i> Rosca
+                                </button>
+                                <button class="chart-type-btn" data-type="bar"
+                                    onclick="changeChartType('doughnutChart', 'bar')">
+                                    <i class="fas fa-chart-bar"></i> Barras
+                                </button>
+                                <button class="chart-type-btn" data-type="bubble"
+                                    onclick="changeChartType('doughnutChart', 'bubble')">
+                                    <i class="fas fa-circle"></i> Bolhas
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="doughnutChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 4. EVOLUÇÃO DO CONSUMO ANUAL -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Evolução do Consumo Anual</h3>
+                            <div class="chart-type-controls">
+                                <button class="chart-type-btn active" data-type="line"
+                                    onclick="changeChartType('evolucaoConsumoChart', 'line')">
+                                    <i class="fas fa-chart-line"></i> Linhas
+                                </button>
+                                <button class="chart-type-btn" data-type="area"
+                                    onclick="changeChartType('evolucaoConsumoChart', 'area')">
+                                    <i class="fas fa-chart-area"></i> Área
+                                </button>
+                                <button class="chart-type-btn" data-type="mixed"
+                                    onclick="changeChartType('evolucaoConsumoChart', 'mixed')">
+                                    <i class="fas fa-chart-area"></i> Misto
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="evolucaoConsumoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROLES GLOBAIS -->
+                <div class="chart-controls">
+                    <button class="update-data-btn" onclick="generateRandomData()">
+                        <i class="fas fa-sync-alt"></i> Gerar Novos Dados
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="impacto">
+            <div class="impact-content">
+                <h2>Impacto Sustentável</h2>
+                <p>Nosso sistema contribui diretamente para a sustentabilidade empresarial e ambiental. Ao fornecer
+                    análises detalhadas do consumo energético, capacitamos gestores a identificar desperdícios, reduzir
+                    custos operacionais e implementar práticas mais eficientes.</p>
+                <p>Com o controle inteligente da energia, sua empresa não apenas economiza recursos financeiros, mas
+                    também reduz significativamente seu impacto ambiental, contribuindo para um futuro mais sustentável.
+                </p>
+                <button class="ods-badge-btn" onclick="window.open('https://brasil.un.org/pt-br/sdgs/7', '_blank')">
+                    Alinhado com ODS 7 - Energia Acessível e Limpa
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; <b><a href=".">SAGE</a></b> - Sistema de Análise e Gerenciamento Energético
+    </footer>
+
+    <script src="src/javaScript/index.js"></script>
+    <script src="src/javaScript/odsFloating.js"></script>
+    <script src="src/javaScript/indexCharts.js"></script>
+</body>
+
+</html>
