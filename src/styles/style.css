@@ -484,7 +484,7 @@ footer a:hover {
 
 /* Seção de Gráficos */
 #graficos {
-    background: var(--color-bg-white);
+    background: var(--color-bg);
     color: var(--color-secondary);
     flex-direction: column;
     padding: 15vh 20px;

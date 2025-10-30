@@ -1,6 +1,6 @@
 /**
  * Integração da página de cadastro com a API
- * ATUALIZADO para corresponder EXATAMENTE ao backend Spring Boot
+ * ATUALIZADO para Swagger e Cookies
  */
 
 // ==================== LOGIN ====================
@@ -74,7 +74,7 @@ if (companyForm) {
             submitBtn.textContent = 'Cadastrando...';
             submitBtn.disabled = true;
 
-            // Prepara dados EXATAMENTE como o backend espera
+            // Prepara dados EXATAMENTE como o Swagger espera (POST)
             const formData = {
                 // Empresa
                 cnpj: document.getElementById('companyCnpj').value.replace(/\D/g, ''),
@@ -189,7 +189,7 @@ function showNotification(message, type = 'success') {
 
 // ==================== VERIFICAÇÃO DE AUTENTICAÇÃO ====================
 function checkAuth() {
-    const token = localStorage.getItem('auth_token');
+    const token = CookieManager.get('auth_token');
     const currentPage = window.location.pathname;
 
     // Se já está logado e na página de cadastro, redireciona para dashboard
