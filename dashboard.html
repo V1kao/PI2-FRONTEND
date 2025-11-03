@@ -22,7 +22,6 @@
             </button>
             <div class="sidebar-brand">
                 <h1>SAGE</h1>
-                <p>Dashboard de Gestão</p>
             </div>
         </div>
 
@@ -67,6 +66,12 @@
                 <a href="#" class="nav-link" data-section="vinculos">
                     <i class="fas fa-link"></i>
                     <span class="nav-text">Gerenciar Vínculos</span>
+                </a>
+            </li>
+            <li class="nav-item logout-item">
+                <a href="#" class="nav-link nav-link-logout" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Desconectar</span>
                 </a>
             </li>
         </ul>
@@ -119,79 +124,21 @@
                 </div>
             </div>
 
-            <!-- Seção de Relatórios -->
-            <div class="reports-section">
-                <button class="reports-toggle-btn" id="reportsToggleBtn">
-                    <i class="fas fa-chart-bar"></i> Gerar Relatórios
-                </button>
-
-                <div class="reports-container" id="reportsContainer">
-                    <div class="reports-header">
-                        <h3>Selecione o Tipo de Relatório</h3>
-                        <button class="close-reports-btn" id="closeReportsBtn">
-                            <i class="fas fa-times"></i>
-                        </button>
+            <!-- Seção de Redirecionamento para Relatórios -->
+            <div class="reports-redirect-section">
+                <div class="reports-redirect-card">
+                    <div class="reports-redirect-icon">
+                        <i class="fas fa-chart-line"></i>
                     </div>
-
-                    <!-- Campos da Conta de Luz (sempre visíveis) -->
-                    <div class="bill-value-inputs">
-                        <div class="bill-value-header">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                            <h5>Informações da Conta de Luz</h5>
-                        </div>
-                        <div class="bill-inputs-grid">
-                            <div class="bill-input-group">
-                                <label for="billValue">Valor da Conta (R$) *</label>
-                                <input type="number" id="billValue" placeholder="Ex: 1500.00" step="0.01" min="0"
-                                    value="">
-                                <div class="error-message" id="billValue-error"></div>
-                            </div>
-                            <div class="bill-input-group">
-                                <label for="billMonth">Mês *</label>
-                                <select id="billMonth">
-                                    <option value="">Selecione o mês</option>
-                                    <option value="01">Janeiro</option>
-                                    <option value="02">Fevereiro</option>
-                                    <option value="03">Março</option>
-                                    <option value="04">Abril</option>
-                                    <option value="05">Maio</option>
-                                    <option value="06">Junho</option>
-                                    <option value="07">Julho</option>
-                                    <option value="08">Agosto</option>
-                                    <option value="09">Setembro</option>
-                                    <option value="10">Outubro</option>
-                                    <option value="11">Novembro</option>
-                                    <option value="12">Dezembro</option>
-                                </select>
-                                <div class="error-message" id="billMonth-error"></div>
-                            </div>
-                            <div class="bill-input-group">
-                                <label for="billYear">Ano *</label>
-                                <input type="number" id="billYear" placeholder="Ex: 2025" min="2020" max="2030"
-                                    value="">
-                                <div class="error-message" id="billYear-error"></div>
-                            </div>
-                        </div>
+                    <div class="reports-redirect-content">
+                        <h3>Relatórios e Análises</h3>
+                        <p>Visualize gráficos detalhados de consumo energético, custos por dispositivo e análises por
+                            setor</p>
                     </div>
-
-                    <div class="reports-grid">
-                        <button class="report-btn" data-report="consumo-setor">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Consumo por Setor</span>
-                        </button>
-                        <button class="report-btn" data-report="economia">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Economia Alcançada</span>
-                        </button>
-                        <button class="report-btn" data-report="custos">
-                            <i class="fas fa-chart-pie"></i>
-                            <span>Custos por Dispositivo</span>
-                        </button>
-                        <button class="report-btn" data-report="evolucao">
-                            <i class="fas fa-chart-area"></i>
-                            <span>Evolução Anual</span>
-                        </button>
-                    </div>
+                    <a href="relatorios.html" class="btn-reports-redirect">
+                        <i class="fas fa-arrow-right"></i>
+                        Gerar Relatórios
+                    </a>
                 </div>
             </div>
         </div>
@@ -466,7 +413,7 @@
     <script src="src/javaScript/api-service.js"></script>
     <script src="src/javaScript/dashboard-integration.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
 </body>
 
 </html>

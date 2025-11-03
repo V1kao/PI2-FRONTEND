@@ -35,6 +35,7 @@
         <link rel="stylesheet" href="src/styles/navbar.css">
         <link rel="stylesheet" href="src/styles/banner.css">
         <link rel="stylesheet" href="src/styles/stylesOdsButton.css">
+        <link rel="stylesheet" href="src/styles/results.css">
 
         <!-- GSAP and ScrollTrigger -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -64,6 +65,7 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Início</a></li>
                 <li><a href="#sistema">Sistema</a></li>
+                <li><a href="#resultados">Resultados</a></li>
                 <li><a href="#graficos">Análise Visual</a></li>
                 <li><a href="#impacto">Impacto</a></li>
                 <li><a href="saibaMais.html">Saiba Mais</a></li>
@@ -97,10 +99,67 @@
                 <br>
                 <p>Com dashboards interativos e análises de rateio, sua empresa poderá identificar pontos críticos de
                     consumo, reduzir custos operacionais e implementar estratégias eficazes para maior eficiência
-                    energética e sustentabilidade.</p>
+                    energética e sustentabilidade.
+                </p>
             </div>
             <div id="solution-image-container">
                 <img id="solution-image" src="src/images/system-image.png" alt="">
+            </div>
+        </section>
+
+        <section id="resultados">
+            <div class="results-wrapper">
+                <div class="impact-content">
+                    <h2>Resultados Comprovados</h2>
+                    <p>Veja como empresas reais transformaram sua gestão energética com o SAGE</p>
+                </div>
+
+                <div class="results-grid">
+                    <!-- Gráfico de Linhas - Evolução do Custo Mensal -->
+                    <div class="result-card result-card-large">
+                        <div class="result-card-header">
+                            <h3>Evolução do Custo Mensal</h3>
+                            <p class="result-subtitle">Comparativo antes e depois do SAGE</p>
+                        </div>
+                        <div class="result-canvas-container">
+                            <canvas id="evolutionChart"></canvas>
+                        </div>
+                        <div class="result-highlight">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Redução média de <strong>18% nos custos</strong> em 6 meses</span>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Barras - Economia por Setor -->
+                    <div class="result-card">
+                        <div class="result-card-header">
+                            <h3>Economia por Setor</h3>
+                            <p class="result-subtitle">Após implementação do SAGE</p>
+                        </div>
+                        <div class="result-canvas-container">
+                            <canvas id="savingsChart"></canvas>
+                        </div>
+                        <div class="result-highlight">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>Economia total de <strong>R$ 2.847/mês</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Rosca - Distribuição da Redução -->
+                    <div class="result-card">
+                        <div class="result-card-header">
+                            <h3>Origem da Economia</h3>
+                            <p class="result-subtitle">Principais fontes de redução</p>
+                        </div>
+                        <div class="result-canvas-container">
+                            <canvas id="reductionChart"></canvas>
+                        </div>
+                        <div class="result-highlight">
+                            <i class="fas fa-lightbulb"></i>
+                            <span><strong>42% da economia</strong> vem da otimização de ar-condicionado</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -242,6 +301,7 @@
     <script src="src/javaScript/index.js"></script>
     <script src="src/javaScript/odsFloating.js"></script>
     <script src="src/javaScript/indexCharts.js"></script>
+    <script src="src/javaScript/resultsCharts.js"></script>
 </body>
 
 </html>

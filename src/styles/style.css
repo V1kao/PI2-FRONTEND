@@ -84,9 +84,10 @@ section {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    height: 100vh;
+    min-height: 70vh;
     background: var(--color-bg-white);
     color: var(--color-secondary);
+    padding: 60px 20px;
 }
 
 /* Cada div ocupa 50% da largura em telas grandes */
@@ -391,9 +392,6 @@ section {
     color: var(--color-bg);
 }
 
-
-
-
 /* Responsivo */
 @media (max-width: 600px) {
     .section-title-dark {
@@ -521,7 +519,8 @@ footer a:hover {
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    overflow: visible; /* Mudança para permitir tooltips */
+    overflow: visible;
+    /* Mudança para permitir tooltips */
     border: 2px solid transparent;
 }
 
@@ -732,30 +731,30 @@ footer a:hover {
         align-items: flex-start;
         gap: 15px;
     }
-    
+
     .chart-card h3 {
         font-size: 1.1rem;
         min-width: auto;
     }
-    
+
     .chart-type-controls {
         width: 100%;
         justify-content: center;
     }
-    
+
     .chart-type-btn {
         flex: 1;
         min-width: 60px;
         padding: 8px 12px;
         font-size: 0.8rem;
     }
-    
+
     .chart-tooltip {
         max-width: 250px;
         font-size: 0.85rem;
         padding: 10px 12px;
     }
-    
+
     .update-data-btn {
         width: 100%;
         max-width: 300px;
@@ -766,16 +765,16 @@ footer a:hover {
     .chart-card {
         padding: 20px 15px;
     }
-    
+
     .chart-canvas-container {
         height: 250px;
     }
-    
+
     .chart-type-btn {
         font-size: 0.75rem;
         padding: 6px 10px;
     }
-    
+
     .chart-tooltip {
         max-width: 220px;
         bottom: -5px;
@@ -810,6 +809,7 @@ footer a:hover {
     max-width: 600px;
     margin: 0 auto;
 }
+
 /* Seção de Impacto */
 #impacto {
     background: linear-gradient(135deg, var(--color-primary), #e6a400);
@@ -866,4 +866,253 @@ footer a:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ========== SEÇÃO DE RESULTADOS ========== */
+#resultados {
+    background: var(--color-primary);
+    color: var(--color-secondary);
+    min-height: 100vh;
+    padding: 100px 20px 80px;
+}
+
+.results-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Grid de Resultados */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    width: 100%;
+}
+
+/* Card Grande - Gráfico de Linhas */
+.result-card-large {
+    grid-column: 1 / -1;
+}
+
+/* Cards de Resultado */
+.result-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 183, 3, 0.05), transparent);
+    transition: left 0.6s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(255, 183, 3, 0.15);
+    border-color: rgba(255, 183, 3, 0.3);
+}
+
+.result-card:hover::before {
+    left: 100%;
+}
+
+/* Cabeçalho do Card */
+.result-card-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.result-card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    margin-bottom: 5px;
+}
+
+.result-subtitle {
+    font-size: 1rem;
+    color: var(--color-secondary);
+    opacity: 0.6;
+    margin: 0;
+}
+
+/* Container do Canvas */
+.result-canvas-container {
+    position: relative;
+    height: 300px;
+    margin: 20px 0;
+    padding: 10px;
+}
+
+.result-card-large .result-canvas-container {
+    height: 350px;
+}
+
+.result-canvas-container canvas {
+    max-width: 100%;
+    height: 100% !important;
+}
+
+/* Destaque de Resultado */
+.result-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 183, 3, 0.1), rgba(255, 183, 3, 0.05));
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 183, 3, 0.2);
+}
+
+.result-highlight i {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.result-highlight span {
+    font-size: 1rem;
+    color: var(--color-secondary);
+}
+
+.result-highlight strong {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Animação de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.result-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.result-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.result-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* ========== RESPONSIVIDADE ========== */
+@media (max-width: 1024px) {
+    .results-grid {
+        gap: 25px;
+    }
+
+    .result-canvas-container {
+        height: 280px;
+    }
+
+    .result-card-large .result-canvas-container {
+        height: 320px;
+    }
+}
+
+@media (max-width: 768px) {
+    #resultados {
+        padding: 80px 20px 60px;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .result-card-large {
+        grid-column: 1;
+    }
+
+    .result-card {
+        padding: 25px 20px;
+    }
+
+    .result-card-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .result-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .result-canvas-container {
+        height: 250px;
+    }
+
+    .result-card-large .result-canvas-container {
+        height: 280px;
+    }
+
+    .result-highlight {
+        flex-direction: column;
+        padding: 15px;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .result-highlight i {
+        font-size: 1.3rem;
+    }
+
+    .result-highlight span {
+        font-size: 0.95rem;
+    }
+
+}
+
+@media (max-width: 480px) {
+    #resultados {
+        padding: 60px 15px 40px;
+    }
+
+    .result-card {
+        padding: 20px 15px;
+    }
+
+    .result-card-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .result-canvas-container {
+        height: 220px;
+        padding: 5px;
+    }
+
+    .result-card-large .result-canvas-container {
+        height: 250px;
+    }
+
 }

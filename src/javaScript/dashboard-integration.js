@@ -1,3 +1,7 @@
+/**
+ * Integração da página de dashboard com a API
+ */
+
 // Estado da aplicação
 const appState = {
     setores: [],
@@ -70,7 +74,6 @@ async function loadInitialData() {
     try {
         console.log('Carregando dados iniciais...');
 
-        // Carregar todos os dados em paralelo
         const [departmentsResponse, roomsResponse, deviceTypesResponse, devicesResponse, linksResponse] = await Promise.allSettled([
             apiService.listDepartments({ size: 100 }),
             apiService.listRooms({ size: 100 }),
@@ -79,48 +82,38 @@ async function loadInitialData() {
             apiService.listDeviceRoomAssociations({ size: 100 })
         ]);
 
-        // Processar setores
         if (departmentsResponse.status === 'fulfilled' && departmentsResponse.value?.content) {
             appState.setores = departmentsResponse.value.content;
             console.log(`Setores: ${appState.setores.length}`);
         } else {
-            console.warn('Erro ao carregar setores:', departmentsResponse.reason);
             appState.setores = [];
         }
 
-        // Processar salas
         if (roomsResponse.status === 'fulfilled' && roomsResponse.value?.content) {
             appState.salas = roomsResponse.value.content;
             console.log(`Salas: ${appState.salas.length}`);
         } else {
-            console.warn('Erro ao carregar salas:', roomsResponse.reason);
             appState.salas = [];
         }
 
-        // Processar tipos de dispositivo
         if (deviceTypesResponse.status === 'fulfilled' && deviceTypesResponse.value?.content) {
             appState.deviceTypes = deviceTypesResponse.value.content;
             console.log(`Tipos: ${appState.deviceTypes.length}`);
         } else {
-            console.warn('Erro ao carregar tipos:', deviceTypesResponse.reason);
             appState.deviceTypes = [];
         }
 
-        // Processar dispositivos
         if (devicesResponse.status === 'fulfilled' && devicesResponse.value?.content) {
             appState.dispositivos = devicesResponse.value.content;
             console.log(`Dispositivos: ${appState.dispositivos.length}`);
         } else {
-            console.warn('Erro ao carregar dispositivos:', devicesResponse.reason);
             appState.dispositivos = [];
         }
 
-        // Processar vínculos
         if (linksResponse.status === 'fulfilled' && linksResponse.value?.content) {
             appState.deviceRoomLinks = linksResponse.value.content;
             console.log(`Vínculos: ${appState.deviceRoomLinks.length}`);
         } else {
-            console.warn('Erro ao carregar vínculos:', linksResponse.reason);
             appState.deviceRoomLinks = [];
         }
 
@@ -177,23 +170,13 @@ if (deviceTypeForm) {
                 name: document.getElementById('deviceTypeName').value.trim()
             };
 
-            console.log('Enviando tipo:', formData);
-
-            const response = await apiService.createDeviceType(formData);
-
-            console.log('Resposta:', response);
-
-            // Adicionar ao estado
-            if (response && response.id) {
-                appState.deviceTypes.push(response);
-                updateStats();
-                updateSelectOptions();
-                renderDeviceTypesList();
-                showNotification(`Tipo "${formData.name}" cadastrado com sucesso!`, 'success');
-                deviceTypeForm.reset();
-            } else {
-                throw new Error('Resposta inválida da API');
-            }
+            await apiService.createDeviceType(formData);
+            await loadInitialData();
+            updateStats();
+            updateSelectOptions();
+            renderDeviceTypesList();
+            showNotification(`Tipo "${formData.name}" cadastrado com sucesso!`, 'success');
+            deviceTypeForm.reset();
 
         } catch (error) {
             console.error('Erro ao cadastrar tipo:', error);
@@ -231,22 +214,13 @@ if (setorForm) {
                 description: document.getElementById('setorDescricao').value.trim()
             };
 
-            console.log('Enviando setor:', formData);
-
-            const response = await apiService.createDepartment(formData);
-
-            console.log('Resposta:', response);
-
-            if (response && response.id) {
-                appState.setores.push(response);
-                updateStats();
-                updateSelectOptions();
-                renderAllLists();
-                showNotification(`Setor "${formData.name}" cadastrado com sucesso!`, 'success');
-                setorForm.reset();
-            } else {
-                throw new Error('Resposta inválida da API');
-            }
+            await apiService.createDepartment(formData);
+            await loadInitialData();
+            updateStats();
+            updateSelectOptions();
+            renderAllLists();
+            showNotification(`Setor "${formData.name}" cadastrado com sucesso!`, 'success');
+            setorForm.reset();
 
         } catch (error) {
             console.error('Erro ao cadastrar setor:', error);
@@ -285,22 +259,13 @@ if (salaForm) {
                 departmentId: document.getElementById('salaSetor').value
             };
 
-            console.log('Enviando sala:', formData);
-
-            const response = await apiService.createRoom(formData);
-
-            console.log('✅ Resposta:', response);
-
-            if (response && response.id) {
-                appState.salas.push(response);
-                updateStats();
-                updateSelectOptions();
-                renderAllLists();
-                showNotification(`Sala "${formData.name}" cadastrada com sucesso!`, 'success');
-                salaForm.reset();
-            } else {
-                throw new Error('Resposta inválida da API');
-            }
+            await apiService.createRoom(formData);
+            await loadInitialData();
+            updateStats();
+            updateSelectOptions();
+            renderAllLists();
+            showNotification(`Sala "${formData.name}" cadastrada com sucesso!`, 'success');
+            salaForm.reset();
 
         } catch (error) {
             console.error('Erro ao cadastrar sala:', error);
@@ -339,22 +304,13 @@ if (dispositivoForm) {
                 deviceTypeId: document.getElementById('dispositivoTipo').value
             };
 
-            console.log('Enviando dispositivo:', deviceData);
-
-            const response = await apiService.createDevice(deviceData);
-
-            console.log('Resposta:', response);
-
-            if (response && response.id) {
-                appState.dispositivos.push(response);
-                updateStats();
-                renderAllLists();
-                updateSelectOptions();
-                showNotification(`Dispositivo "${deviceData.name}" cadastrado com sucesso!`, 'success');
-                dispositivoForm.reset();
-            } else {
-                throw new Error('Resposta inválida da API');
-            }
+            await apiService.createDevice(deviceData);
+            await loadInitialData();
+            updateStats();
+            renderAllLists();
+            updateSelectOptions();
+            showNotification(`Dispositivo "${deviceData.name}" cadastrado com sucesso!`, 'success');
+            dispositivoForm.reset();
 
         } catch (error) {
             console.error('Erro ao cadastrar dispositivo:', error);
@@ -394,21 +350,12 @@ if (deviceRoomLinkForm) {
                 deviceId: document.getElementById('linkDevice').value
             };
 
-            console.log('Enviando vínculo:', formData);
-
-            const response = await apiService.associateDeviceToRoom(formData);
-
-            console.log('Resposta:', response);
-
-            if (response && response.id) {
-                appState.deviceRoomLinks.push(response);
-                renderDeviceRoomLinksList();
-                updateStats();
-                showNotification(`Vínculo "${formData.alias}" criado com sucesso!`, 'success');
-                deviceRoomLinkForm.reset();
-            } else {
-                throw new Error('Resposta inválida da API');
-            }
+            await apiService.associateDeviceToRoom(formData);
+            await loadInitialData();
+            renderDeviceRoomLinksList();
+            updateStats();
+            showNotification(`Vínculo "${formData.alias}" criado com sucesso!`, 'success');
+            deviceRoomLinkForm.reset();
 
         } catch (error) {
             console.error('Erro ao criar vínculo:', error);
@@ -815,7 +762,7 @@ async function deleteDeviceRoomLink(id) {
     }
 }
 
-// ==================== RENDERIZAÇÃO DE LISTAS ====================
+// ==================== RENDERIZAÇÃO DE LISTAS (SEM IDs) ====================
 function renderSetoresList() {
     const container = document.getElementById('setoresList');
     const countEl = document.getElementById('setoresCount');
@@ -839,7 +786,6 @@ function renderSetoresList() {
             <div class="list-item-header">
                 <div class="list-item-title">
                     <h4>${setor.name || 'Sem nome'}</h4>
-                    <p>ID: ${setor.id || 'N/A'}</p>
                 </div>
                 <div class="list-item-actions">
                     <button class="btn-edit" onclick="editSetor('${setor.id}')">
@@ -885,7 +831,6 @@ function renderSalasList() {
                 <div class="list-item-header">
                     <div class="list-item-title">
                         <h4>${sala.name || 'Sem nome'}</h4>
-                        <p>ID: ${sala.id || 'N/A'}</p>
                     </div>
                     <div class="list-item-actions">
                         <button class="btn-edit" onclick="editSala('${sala.id}')">
@@ -936,7 +881,6 @@ function renderDispositivosList() {
                 <div class="list-item-header">
                     <div class="list-item-title">
                         <h4>${dispositivo.name || 'Sem nome'}</h4>
-                        <p>ID: ${dispositivo.id || 'N/A'}</p>
                     </div>
                     <div class="list-item-actions">
                         <button class="btn-edit" onclick="editDispositivo('${dispositivo.id}')">
@@ -985,7 +929,6 @@ function renderDeviceTypesList() {
             <div class="list-item-header">
                 <div class="list-item-title">
                     <h4>${deviceType.name || 'Sem nome'}</h4>
-                    <p>ID: ${deviceType.id || 'N/A'}</p>
                 </div>
                 <div class="list-item-actions">
                     <button class="btn-edit" onclick="editDeviceType('${deviceType.id}')">
@@ -1026,7 +969,6 @@ function renderDeviceRoomLinksList() {
                 <div class="list-item-header">
                     <div class="list-item-title">
                         <h4>${link.alias || 'Sem nome'}</h4>
-                        <p>ID: ${link.id || 'N/A'}</p>
                     </div>
                     <div class="list-item-actions">
                         <button class="btn-edit" onclick="editDeviceRoomLink('${link.id}')">
@@ -1079,7 +1021,6 @@ function updateStats() {
 
 // ==================== ATUALIZAÇÃO DE SELECTS ====================
 function updateSelectOptions() {
-    // Select de setor nas salas
     const salaSetorSelect = document.getElementById('salaSetor');
     if (salaSetorSelect) {
         salaSetorSelect.innerHTML = '<option value="">Selecione o setor</option>';
@@ -1091,7 +1032,6 @@ function updateSelectOptions() {
         });
     }
 
-    // Select de tipo nos dispositivos
     const dispositivoTipoSelect = document.getElementById('dispositivoTipo');
     if (dispositivoTipoSelect) {
         dispositivoTipoSelect.innerHTML = '<option value="">Selecione o tipo</option>';
@@ -1103,7 +1043,6 @@ function updateSelectOptions() {
         });
     }
 
-    // Select de sala nos vínculos
     const linkRoomSelect = document.getElementById('linkRoom');
     if (linkRoomSelect) {
         linkRoomSelect.innerHTML = '<option value="">Selecione a sala</option>';
@@ -1115,7 +1054,6 @@ function updateSelectOptions() {
         });
     }
 
-    // Select de dispositivo nos vínculos
     const linkDeviceSelect = document.getElementById('linkDevice');
     if (linkDeviceSelect) {
         linkDeviceSelect.innerHTML = '<option value="">Selecione o dispositivo</option>';
@@ -1185,14 +1123,58 @@ function showNotification(message, type = 'success', duration = 3000) {
     }, duration);
 }
 
+// ==================== LOGOUT ====================
+function logout() {
+    const confirmModal = document.createElement('div');
+    confirmModal.className = 'modal active';
+    confirmModal.id = 'logoutModal';
+    confirmModal.style.zIndex = '10000';
+    confirmModal.innerHTML = `
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header" style="border-bottom: none; justify-content: center; padding: 25px 30px 15px;">
+                <h2 style="color: var(--color-primary); margin: 0;">Confirmar Saída</h2>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; font-size: 1.1rem; margin: 20px 0; color: var(--color-text);">
+                    <i class="fas fa-exclamation-triangle" style="color: #ff6b6b; margin-right: 10px;"></i>
+                    Deseja realmente desconectar?
+                </p>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button class="btn-logout-cancel" onclick="closeLogoutModal()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn-logout-confirm" onclick="confirmLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Desconectar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(confirmModal);
+}
+
+function closeLogoutModal() {
+    const modal = document.getElementById('logoutModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function confirmLogout() {
+    apiService.clearToken();
+    showNotification('Desconectado com sucesso!', 'success');
+    setTimeout(() => {
+        window.location.href = 'cadastro.html';
+    }, 1000);
+}
+
 // ==================== NAVEGAÇÃO ====================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 DOM carregado, iniciando dashboard...');
 
-    // Inicializar dashboard
     initDashboard();
 
-    // Setup modal
     const modalClose = document.getElementById('modalClose');
     if (modalClose) {
         modalClose.addEventListener('click', closeModal);
@@ -1207,7 +1189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Setup navegação
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
     const mobileOverlay = document.getElementById('mobileOverlay');
@@ -1228,13 +1209,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Navegação entre seções
     const navLinks = document.querySelectorAll('.nav-link');
     const contentSections = document.querySelectorAll('.content-section');
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
+
+            if (link.getAttribute('onclick')?.includes('logout')) {
+                return;
+            }
 
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
@@ -1258,7 +1242,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Navegação entre abas de visualização
     const viewTabs = document.querySelectorAll('.view-tab');
     const viewContents = document.querySelectorAll('.view-content');
 
@@ -1278,7 +1261,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Tornar funções disponíveis globalmente
 window.editSetor = editSetor;
 window.deleteSetor = deleteSetor;
 window.editSala = editSala;
@@ -1289,5 +1271,8 @@ window.editDeviceType = editDeviceType;
 window.deleteDeviceType = deleteDeviceType;
 window.editDeviceRoomLink = editDeviceRoomLink;
 window.deleteDeviceRoomLink = deleteDeviceRoomLink;
+window.logout = logout;
+window.closeLogoutModal = closeLogoutModal;
+window.confirmLogout = confirmLogout;
 
 console.log('Dashboard integration script carregado');

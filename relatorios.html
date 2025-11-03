@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - SAGE</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles/dashboard.css">
+    <link rel="stylesheet" href="src/styles/relatorios.css">
+</head>
+
+<body>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="sidebar-brand">
+                <h1>SAGE</h1>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html#visualizar" class="nav-link">
+                    <i class="fas fa-list"></i>
+                    <span class="nav-text">Visualizar Dados</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link active" data-section="relatorios">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="nav-text">Relatórios</span>
+                </a>
+            </li>
+            <li class="nav-item logout-item">
+                <a href="#" class="nav-link nav-link-logout" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Desconectar</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1>Geração de Relatórios</h1>
+            <p>Analise o consumo energético através de gráficos e relatórios detalhados</p>
+        </div>
+
+        <!-- Campos da Conta de Luz -->
+        <div class="bill-value-inputs">
+            <div class="bill-value-header">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h5>Informações da Conta de Luz</h5>
+            </div>
+            <div class="bill-inputs-grid">
+                <div class="bill-input-group">
+                    <label for="billValue">Valor da Conta (R$) *</label>
+                    <input type="number" id="billValue" placeholder="Ex: 1500.00" step="0.01" min="0">
+                    <div class="error-message" id="billValue-error"></div>
+                </div>
+                <div class="bill-input-group">
+                    <label for="billMonth">Mês *</label>
+                    <select id="billMonth">
+                        <option value="">Selecione o mês</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                    <div class="error-message" id="billMonth-error"></div>
+                </div>
+                <div class="bill-input-group">
+                    <label for="billYear">Ano *</label>
+                    <input type="number" id="billYear" placeholder="Ex: 2025" min="2020" max="2030">
+                    <div class="error-message" id="billYear-error"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipos de Relatórios -->
+        <div class="reports-section">
+            <h2>Selecione o Tipo de Relatório</h2>
+            <div class="reports-grid">
+                <button class="report-btn" data-report="consumo-setor">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Consumo por Setor</span>
+                </button>
+                <button class="report-btn" data-report="consumo-sala">
+                    <i class="fas fa-door-open"></i>
+                    <span>Consumo por Sala</span>
+                </button>
+                <button class="report-btn" data-report="custos">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Custos por Dispositivo</span>
+                </button>
+                <button class="report-btn" data-report="dispositivos">
+                    <i class="fas fa-microchip"></i>
+                    <span>Análise de Dispositivos</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Container para gráficos gerados -->
+        <div id="chartsContainer"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script src="src/javaScript/api-service.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="src/javaScript/relatorios.js"></script>
+
+</body>
+
+</html>
