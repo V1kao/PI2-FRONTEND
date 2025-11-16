@@ -10,12 +10,10 @@ header {
     max-width: 1100px;
     padding: 15px 30px;
     border-radius: var(--radius);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: blur(10px);
+    background: #000000;
     z-index: 1000;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(247, 247, 247, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    border: none;
 }
 
 /* Ajuste para páginas com botão de voltar */
@@ -25,45 +23,47 @@ body.has-back-button header {
     max-width: calc(1100px - 140px);
 }
 
+.header-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .logo {
     color: var(--color-primary);
     font-size: 1.5rem;
     font-weight: 700;
+    text-decoration: none;
+}
+
+.navbar {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 0;
 }
 
 .navbar ul {
     list-style: none;
     display: flex;
     gap: 30px;
+    margin: 0;
+    padding: 0;
 }
 
 .navbar li a {
-    color: var(--color-text);
+    color: var(--color-primary);
     text-decoration: none;
     font-size: 1rem;
-    position: relative;
-    padding-bottom: 4px;
+    font-weight: 500;
+    padding: 8px 12px;
     transition: all var(--transition);
-}
-
-.navbar li a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0%;
-    height: 2px;
-    background: var(--color-primary);
-    transition: width var(--transition);
+    border-radius: 4px;
 }
 
 .navbar li a:hover {
-    color: var(--color-primary);
-}
-
-.navbar li a:hover::after {
-    width: 100%;
+    background: rgba(255, 183, 3, 0.1);
 }
 
 /* Botão hambúrguer */
@@ -81,14 +81,10 @@ body.has-back-button header {
 .mobile-menu-toggle span {
     width: 25px;
     height: 3px;
-    background: var(--color-text);
+    background: var(--color-primary);
     margin: 3px 0;
     transition: all 0.3s ease;
     border-radius: 2px;
-}
-
-.mobile-menu-toggle:hover span {
-    background: var(--color-primary);
 }
 
 /* Animação do botão quando ativo */
@@ -117,6 +113,16 @@ body.has-back-button header {
     backdrop-filter: blur(2px);
 }
 
+/* Estilo para navbar ao rolar (adicionado via JS) */
+header.scrolled {
+    background: #000000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+    padding: 10px 30px;
+}
+
 /* Media query para responsividade */
 @media (max-width: 768px) {
 
@@ -139,6 +145,10 @@ body.has-back-button header {
         z-index: 1002;
     }
 
+    .navbar {
+        margin-left: 0;
+    }
+
     /* Esconder navbar padrão em mobile */
     .navbar {
         position: fixed;
@@ -146,10 +156,10 @@ body.has-back-button header {
         right: -100%;
         width: 280px;
         height: 100vh;
-        background: var(--color-bg);
+        background: #000000;
         transition: right 0.3s ease;
         z-index: 1001;
-        border-left: 1px solid rgba(247, 247, 247, 0.1);
+        border-left: 1px solid rgba(255, 183, 3, 0.2);
     }
 
     /* Navbar ativa em mobile */
@@ -167,7 +177,7 @@ body.has-back-button header {
         flex-direction: column;
         padding: 80px 0 20px;
         height: 100%;
-        justify-content: flex-start;
+        justify-content: flex-end;
         align-items: flex-start;
         gap: 0;
         margin: 0;
@@ -176,7 +186,7 @@ body.has-back-button header {
     /* Links em mobile */
     .navbar li {
         width: 100%;
-        border-bottom: 1px solid rgba(247, 247, 247, 0.1);
+        border-bottom: 1px solid rgba(255, 183, 3, 0.1);
         opacity: 0;
         transform: translateX(20px);
         animation: slideInRight 0.3s ease forwards;
@@ -194,11 +204,6 @@ body.has-back-button header {
         background: rgba(255, 183, 3, 0.1);
         color: var(--color-primary);
         padding-left: 35px;
-    }
-
-    /* Remover underline em mobile */
-    .navbar li a::after {
-        display: none;
     }
 
     /* Animação de entrada dos itens */
@@ -224,6 +229,10 @@ body.has-back-button header {
 
     .navbar li:nth-child(6) {
         animation-delay: 0.6s;
+    }
+
+    .navbar li:nth-child(7) {
+        animation-delay: 0.7s;
     }
 }
 

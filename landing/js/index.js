@@ -62,10 +62,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', function () {
     const header = document.querySelector('header');
     if (window.scrollY > 100) {
-        header.style.background = 'rgba(39, 39, 39, 0.9)';
-        header.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.4)';
+        header.classList.add('scrolled');
     } else {
-        header.style.background = 'var(--glass-bg)';
-        header.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
+        header.classList.remove('scrolled');
     }
 });
